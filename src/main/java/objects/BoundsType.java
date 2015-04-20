@@ -1,6 +1,6 @@
 package objects;
 
-public enum BoundsType {
+enum BoundsType {
     RECTANGLE,
     CIRCLE
 }

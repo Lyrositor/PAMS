@@ -1,6 +1,6 @@
 package objects;
 
-public class BoundingBox {
+class BoundingBox {
 
     public final BoundsType TYPE;
 
@@ -14,19 +14,19 @@ public class BoundingBox {
     public double radius() {
         if (TYPE == BoundsType.CIRCLE)
             return params[0];
-        return .0f;
+        return .0;
     }
 
     public double width() {
         if (TYPE == BoundsType.RECTANGLE)
             return params[0];
-        return .0f;
+        return .0;
     }
 
     public double height() {
         if (TYPE == BoundsType.RECTANGLE)
             return params[1];
-        return .0f;
+        return .0;
     }
 
 }

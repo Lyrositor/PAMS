@@ -14,24 +14,9 @@ public class Bubble extends PhysicsObject {
     }
     //il faudrait, comme on avait dit, lier certains paramètres entre eux : la couleur et la vitesse, la hauteur du son et la taille du rayon...
 
-    public Vector2d getVitesse() {
-        return vitesse;
-    }
-
-    public void setVitesse(Vector2d v) {
-        vitesse = v;
-    }
-
-    public Vector2d getPosition() {
-        return position;
-    }
 
     public Color getColor() {
         return new Color(0, 0, 0);
-    }
-
-    public void setAcceleration(Vector2d a) {
-        acceleration = a;
     }
 
     /**

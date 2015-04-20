@@ -12,7 +12,17 @@ public class Vector2d {
     }
 
     public Vector2d() {
-        this(0.0, 0.0);
+        this(.0, .0);
+    }
+
+    public void add(Vector2d vector2) {
+        x += vector2.x;
+        y += vector2.y;
+    }
+
+    public void sub(Vector2d vector2) {
+        x -= vector2.x;
+        y -= vector2.y;
     }
 
     public double norm() {

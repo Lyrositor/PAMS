@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class PAMS extends JFrame {
 
@@ -11,15 +12,11 @@ public class PAMS extends JFrame {
     public PAMS() {
         super();
 
-        // Démarrer les sous-systèmes.
-        SoundEngine sound = new SoundEngine();
-        sound.start();
-
         // Préparer la fenêtre pour l'affichage, puis l'afficher.
-        setupWindow();
+        BufferedImage canvas = setupWindow();
 
         // Lancer la simulation.
-        simulation = new Simulation(sound);
+        simulation = new Simulation(canvas);
         simulation.run();
     }
 
@@ -30,7 +27,7 @@ public class PAMS extends JFrame {
     /**
      * Initialise tous les composants de la fenêtre et l'affiche.
      */
-    private void setupWindow() {
+    private BufferedImage setupWindow() {
         principal = new BorderLayout();
         Container content = this.getContentPane();
         content.setLayout(principal);
@@ -61,5 +58,7 @@ public class PAMS extends JFrame {
 
         this.getContentPane().add(colonne, BorderLayout.EAST);
         this.setVisible(true);
+
+        return null;  // Remplacer par le canvas sur lequel on va dessiner les bulles.
     }
 }

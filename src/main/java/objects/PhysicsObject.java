@@ -28,10 +28,30 @@ class PhysicsObject {
         return position;
     }
 
-    public void applyForce(Vector2d position, Vector2d direction) {
+    public void setPosition(Vector2d p) {
+        position = p;
     }
 
-    public boolean intersects(PhysicsObject object) {
+    public Vector2d getVitesse() {
+        return vitesse;
+    }
+
+    public void setVitesse(Vector2d v) {
+        vitesse = v;
+    }
+
+    public Vector2d getAcceleration() {
+        return acceleration;
+    }
+
+    public void setAcceleration(Vector2d a) {
+        acceleration = a;
+    }
+
+    public void applyForce(Vector2d position, Vector2d force) {
+    }
+
+    public Vector2d intersectsAt(PhysicsObject object) {
         BoundingBox bounds1 = this.bounds;
         BoundingBox bounds2 = object.getBounds();
         Vector2d pos1 = this.position;
@@ -43,7 +63,7 @@ class PhysicsObject {
         } else if (type1 == BoundsType.CIRCLE && type2 == BoundsType.RECTANGLE) {
         } else
             System.out.println("ERROR: Unsupported bounds intersection.");
-        return false;
+        return null;
     }
 }
 
