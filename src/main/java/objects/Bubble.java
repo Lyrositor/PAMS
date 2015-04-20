@@ -9,11 +9,8 @@ public class Bubble extends PhysicsObject {
     private float rayon;
 
     public Bubble(float r, Vector2d p, Vector2d v, Vector2d a) {
-        super(new BoundingBox(BoundsType.CIRCLE, new double[]{r}));
+        super(new BoundingBox(BoundsType.CIRCLE, r), p, v, a);
         rayon = r;
-        position = p;
-        vitesse = v;
-        acceleration = a;
     }
     //il faudrait, comme on avait dit, lier certains paramètres entre eux : la couleur et la vitesse, la hauteur du son et la taille du rayon...
 

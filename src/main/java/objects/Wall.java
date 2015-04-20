@@ -12,10 +12,9 @@ public class Wall extends PhysicsObject {
     private Color teinte;
 
     public Wall(int l, int h, Vector2d p, int cE, Color t) {
-        super(new BoundingBox(BoundsType.RECTANGLE, new double[]{l, h}));
+        super(new BoundingBox(BoundsType.RECTANGLE, l, h), p, Vector2d.NULL, Vector2d.NULL);
         largeur = l;
         hauteur = h;
-        position = p;
         coefficientElasticite = cE;
         teinte = t;
     }

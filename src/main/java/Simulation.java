@@ -1,4 +1,4 @@
-public class Simulation {
+class Simulation {
 
     private SoundEngine sound;
 

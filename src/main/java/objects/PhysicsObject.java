@@ -2,15 +2,18 @@ package objects;
 
 import math.Vector2d;
 
-public class PhysicsObject {
+class PhysicsObject {
 
     protected BoundingBox bounds;
     protected Vector2d position;
     protected Vector2d vitesse;
     protected Vector2d acceleration;
 
-    public PhysicsObject(BoundingBox bounds) {
-        this.bounds = bounds;
+    public PhysicsObject(BoundingBox b, Vector2d p, Vector2d v, Vector2d a) {
+        bounds = b;
+        position = p;
+        vitesse = v;
+        acceleration = a;
     }
 
     public BoundingBox getBounds() {
@@ -25,7 +28,7 @@ public class PhysicsObject {
         return position;
     }
 
-    public void applyForce(Vector2d position) {
+    public void applyForce(Vector2d position, Vector2d direction) {
     }
 
     public boolean intersects(PhysicsObject object) {

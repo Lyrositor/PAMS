@@ -6,7 +6,7 @@ public class BoundingBox {
 
     private final double[] params;
 
-    public BoundingBox(BoundsType type, double[] params) {
+    public BoundingBox(BoundsType type, double... params) {
         TYPE = type;
         this.params = params;
     }

@@ -2,6 +2,7 @@ package math;
 
 public class Vector2d {
 
+    public static Vector2d NULL = new Vector2d();
     public double x;
     public double y;
 
