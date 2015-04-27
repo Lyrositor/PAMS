@@ -2,18 +2,17 @@ package objects;
 
 import math.Vector2d;
 
-class PhysicsObject {
+public class PhysicsObject {
 
     protected BoundingBox bounds;
     protected Vector2d position;
     protected Vector2d vitesse;
     protected Vector2d acceleration;
 
-    public PhysicsObject(BoundingBox b, Vector2d p, Vector2d v, Vector2d a) {
+    public PhysicsObject(BoundingBox b, Vector2d p, Vector2d v) {
         bounds = b;
         position = p;
         vitesse = v;
-        acceleration = a;
     }
 
     public BoundingBox getBounds() {
@@ -38,32 +37,6 @@ class PhysicsObject {
 
     public void setVitesse(Vector2d v) {
         vitesse = v;
-    }
-
-    public Vector2d getAcceleration() {
-        return acceleration;
-    }
-
-    public void setAcceleration(Vector2d a) {
-        acceleration = a;
-    }
-
-    public void applyForce(Vector2d position, Vector2d force) {
-    }
-
-    public Vector2d intersectsAt(PhysicsObject object) {
-        BoundingBox bounds1 = this.bounds;
-        BoundingBox bounds2 = object.getBounds();
-        Vector2d pos1 = this.position;
-        Vector2d pos2 = object.getPosition();
-        BoundsType type1 = bounds1.TYPE;
-        BoundsType type2 = bounds2.TYPE;
-
-        if (type1 == BoundsType.CIRCLE && type1 == type2) {
-        } else if (type1 == BoundsType.CIRCLE && type2 == BoundsType.RECTANGLE) {
-        } else
-            System.out.println("ERROR: Unsupported bounds intersection.");
-        return null;
     }
 }
 

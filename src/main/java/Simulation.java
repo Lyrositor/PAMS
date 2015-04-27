@@ -8,8 +8,8 @@ class Simulation {
 
     public Simulation(BufferedImage canvas) {
         // Démarrer les sous-systèmes.
-        graphics = new GraphicsEngine(canvas);
         physics = new PhysicsEngine();
+        //graphics = new GraphicsEngine(physics, canvas);
         sound = new SoundEngine();
         sound.start();
     }
@@ -20,8 +20,10 @@ class Simulation {
             // Mettre à jour le temps écoulé.
 
             // Mettre à jour la simulation physique.
+            physics.update(delta);
 
             // Mettre à jour l'affichage graphique.
+            //graphics.update(delta);
         }
     }
 

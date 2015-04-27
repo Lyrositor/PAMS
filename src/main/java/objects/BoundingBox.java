@@ -29,4 +29,10 @@ class BoundingBox {
         return .0;
     }
 
+    public double orientation() {
+        if (TYPE == BoundsType.LINE)
+            return params[0];
+        return .0;
+    }
+
 }

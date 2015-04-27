@@ -2,5 +2,6 @@ package objects;
 
 enum BoundsType {
     RECTANGLE,
-    CIRCLE
+    CIRCLE,
+    LINE
 }
