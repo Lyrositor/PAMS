@@ -1,4 +1,5 @@
 import java.awt.image.BufferedImage;
+import java.util.Date;
 
 class Simulation {
 
@@ -15,9 +16,12 @@ class Simulation {
     }
 
     public void run() {
-        double delta = 0;
+        double delta;
+        double previous = new Date().getTime();
         while (true) {
             // Mettre à jour le temps écoulé.
+            delta = new Date().getTime() - previous;
+            previous = new Date().getTime();
 
             // Mettre à jour la simulation physique.
             physics.update(delta);

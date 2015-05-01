@@ -15,14 +15,12 @@ public class Vector2d {
         this(.0, .0);
     }
 
-    public void add(Vector2d vector2) {
-        x += vector2.x;
-        y += vector2.y;
+    public Vector2d add(Vector2d vector2) {
+        return new Vector2d(x + vector2.x, y + vector2.y);
     }
 
-    public void sub(Vector2d vector2) {
-        x -= vector2.x;
-        y -= vector2.y;
+    public Vector2d sub(Vector2d vector2) {
+        return new Vector2d(x - vector2.x, y - vector2.y);
     }
 
     public double norm() {
@@ -31,6 +29,11 @@ public class Vector2d {
 
     public double norm2() {
         return Math.pow(x, 2) + Math.pow(y, 2);
+    }
+
+    public Vector2d setNorm(double length) {
+        double k = Math.sqrt(length / norm());
+        return new Vector2d(k * x, k * y);
     }
 
 }
