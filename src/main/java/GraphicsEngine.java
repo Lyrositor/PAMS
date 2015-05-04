@@ -1,11 +1,11 @@
-import java.awt.image.BufferedImage;
+import javax.swing.*;
 
 class GraphicsEngine {
 
-    private BufferedImage canvas;
+    private JPanel dessin;
 
-    public GraphicsEngine(BufferedImage canvas) {
-        this.canvas = canvas;
+    public GraphicsEngine(JPanel dessin) {
+        this.dessin = dessin;
     }
 
 }

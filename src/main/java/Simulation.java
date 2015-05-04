@@ -1,4 +1,4 @@
-import java.awt.image.BufferedImage;
+import javax.swing.*;
 import java.util.Date;
 
 class Simulation {
@@ -7,7 +7,7 @@ class Simulation {
     private PhysicsEngine physics;
     private SoundEngine sound;
 
-    public Simulation(BufferedImage canvas) {
+    public Simulation(JPanel dessin) {
         // Démarrer les sous-systèmes.
         physics = new PhysicsEngine();
         //graphics = new GraphicsEngine(physics, canvas);
