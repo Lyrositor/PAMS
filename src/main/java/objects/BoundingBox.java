@@ -1,6 +1,6 @@
 package objects;
 
-class BoundingBox {
+public class BoundingBox {
 
     // Codes pour l'orientation du type LINE.
     public static final double VERTICAL = 0;

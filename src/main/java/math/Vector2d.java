@@ -23,12 +23,20 @@ public class Vector2d {
         return new Vector2d(x - vector2.x, y - vector2.y);
     }
 
+    public Vector2d multiply(double k) {
+        return new Vector2d(x * k, y * k);
+    }
+
     public double norm() {
         return Math.sqrt(this.norm2());
     }
 
     public double norm2() {
         return Math.pow(x, 2) + Math.pow(y, 2);
+    }
+
+    public double angle() {
+        return Math.atan2(y, x);
     }
 
     public Vector2d setNorm(double length) {
