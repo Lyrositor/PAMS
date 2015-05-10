@@ -65,7 +65,6 @@ class PhysicsEngine {
                 if (intersection == null)
                     continue;
                 Vector2d nouvelleVitesse = bubble.getVitesse();
-                System.out.println(wall.getBounds().orientation());
                 if (wall.getBounds().orientation() == BoundingBox.VERTICAL)
                     nouvelleVitesse.x = -nouvelleVitesse.x;
                 else
