@@ -6,22 +6,40 @@ import java.awt.*;
 
 public class Wall extends PhysicsObject {
 
-    private Color teinte;
-    private double length;
+    private Vector2d dimensions;
+    private Vector2d boundsLine;
+    private Color color;
+    private boolean isHorizontal;  // true: horizontal, false: vertical
 
-    public Wall(double e, double l, double o, Vector2d p, Color t) {
-        super(new BoundingBox(BoundsType.LINE, e, o), p, Vector2d.NULL);
-        teinte = t;
-        length = l;
+    public Wall(
+            Vector2d dimensions, Vector2d position,
+            boolean isHorizontal, double boundsOffset, Color color) {
+        super(position, Vector2d.NULL);
+
+        this.dimensions = dimensions;
+        this.isHorizontal = isHorizontal;
+        this.color = color;
+
+        if (isHorizontal)
+            boundsLine = new Vector2d(position.x, position.y + boundsOffset);
+        else
+            boundsLine = new Vector2d(position.x + boundsOffset, position.y);
     }
 
     public Vector2d getDimensions() {
-        Vector2d dim;
-        if (bounds.orientation() == BoundingBox.HORIZONTAL)
-            dim = new Vector2d(length, bounds.width() * 2);
-        else
-            dim = new Vector2d(bounds.width() * 2, length);
-        return dim;
+        return dimensions;
+    }
+
+    public boolean isHorizontal() {
+        return isHorizontal;
+    }
+
+    public Vector2d getBoundsLine() {
+        return boundsLine;
+    }
+
+    public Color getColor() {
+        return color;
     }
 }
 

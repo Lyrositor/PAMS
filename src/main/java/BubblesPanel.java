@@ -40,11 +40,11 @@ class BubblesPanel extends JPanel {
         for (int k = 0; k < bubbles.size(); k++) {
             Bubble b = bubbles.get(k);
             Vector2d pos = b.getPosition();
-            double rayon = b.getRayon();
+            double rayon = b.getRadius();
             g.setColor(b.getColor());
             g.fillOval(
-                    (int) (pos.x - rayon), (int) (pos.y + rayon),
-                    (int) b.getRayon() * 10, (int) b.getRayon() * 10);
+                    (int) Math.round(pos.x - rayon), (int) Math.round(pos.y - rayon),
+                    (int) b.getRadius() * 2, (int) b.getRadius() * 2);
         }
 
         // Dessine tous les murs dans le buffer.
@@ -53,9 +53,7 @@ class BubblesPanel extends JPanel {
             Vector2d pos = w.getPosition();
             Vector2d dim = w.getDimensions();
             g.setColor(Color.blue);
-            g.fillRect(
-                    (int) (pos.x - dim.x / 2), (int) (pos.y - dim.y / 2),
-                    (int) dim.x, (int) dim.y);
+            g.fillRect((int) pos.x, (int) pos.y, (int) dim.x, (int) dim.y);
         }
     }
 

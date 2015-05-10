@@ -7,47 +7,45 @@ import java.awt.*;
 public class Bubble extends PhysicsObject {
 
     private static final double DENSITY = 7.0;
+    private double radius;
 
-    public Bubble(double r, Vector2d p, Vector2d v) {
-        super(new BoundingBox(BoundsType.CIRCLE, r), p, v);
+    public Bubble(double radius, Vector2d position, Vector2d speed) {
+        super(position, speed);
+        this.radius = radius;
     }
 
     public Color getColor() {
         return Color.red;
     }
 
-    public double getRayon() {
-        return bounds.radius();
+    public double getRadius() {
+        return radius;
     }
 
     public double getMass() {
-        return Math.PI * Math.pow(getRayon(), 2) * DENSITY;
+        return Math.PI * Math.pow(radius, 2) * DENSITY;
     }
 
     public Vector2d intersects(Bubble otherBubble) {
-        BoundingBox otherBubbleBounds = otherBubble.getBounds();
         Vector2d otherBubblePosition = otherBubble.getPosition();
         Vector2d diff = otherBubblePosition.sub(position);
 
-        if (diff.norm() <= bounds.radius() + otherBubbleBounds.radius())
-            return diff.setNorm(getRayon());
+        if (diff.norm() <= radius + otherBubble.getRadius())
+            return diff.setNorm(radius);
         return null;
     }
 
-    public Vector2d intersects(Wall wall) {
-        BoundingBox wallBounds = wall.getBounds();
+    public boolean intersects(Wall wall) {
+        Vector2d line = wall.getBoundsLine();
         Vector2d wallPos = wall.getPosition();
         Vector2d diff = wallPos.sub(position);
 
-        if (wallBounds.orientation() == BoundingBox.HORIZONTAL) {
-            if (Math.abs(wallPos.y - position.y) <= wallBounds.width() + bounds.radius())
-                return new Vector2d(0, diff.y / Math.abs(diff.y) * bounds.radius());
-        } else if (wallBounds.orientation() == BoundingBox.VERTICAL) {
-            if (Math.abs(wallPos.x - position.x) <= wallBounds.width() + bounds.radius())
-                return new Vector2d(diff.x / Math.abs(diff.x) * bounds.radius(), 0);
-        }
+        if (wall.isHorizontal() && Math.abs(line.y - position.y) <= radius) {
+            return true;
+        } else if (!wall.isHorizontal() && Math.abs(line.x - position.x) <= radius)
+            return true;
 
-        return null;
+        return false;
     }
 
 }

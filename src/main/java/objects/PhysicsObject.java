@@ -4,23 +4,12 @@ import math.Vector2d;
 
 public class PhysicsObject {
 
-    protected BoundingBox bounds;
     protected Vector2d position;
-    protected Vector2d vitesse;
-    protected Vector2d acceleration;
+    protected Vector2d speed;
 
-    public PhysicsObject(BoundingBox b, Vector2d p, Vector2d v) {
-        bounds = b;
-        position = p;
-        vitesse = v;
-    }
-
-    public BoundingBox getBounds() {
-        return bounds;
-    }
-
-    public void setBounds(BoundingBox bounds) {
-        this.bounds = bounds;
+    public PhysicsObject(Vector2d position, Vector2d speed) {
+        this.position = position;
+        this.speed = speed;
     }
 
     public Vector2d getPosition() {
@@ -31,12 +20,12 @@ public class PhysicsObject {
         position = p;
     }
 
-    public Vector2d getVitesse() {
-        return vitesse;
+    public Vector2d getSpeed() {
+        return speed;
     }
 
-    public void setVitesse(Vector2d v) {
-        vitesse = v;
+    public void setSpeed(Vector2d v) {
+        speed = v;
     }
 }
 
