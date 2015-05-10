@@ -2,16 +2,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 public class PAMS extends JFrame {
 
     private static final int[] DIMENSIONS = {1000, 400};
     private static final String TITLE = "PAMS";
+
     // Variables temporaires.
     int vitesse = 3;
     int nombreBalle = 5;
+
+    // Éléments graphiques.
     private BorderLayout principal;
-    private Simulation simulation;
     private JButton vitessePlus = new JButton(" Vitesse +");
     private JButton vitesseMoins = new JButton(" Vitesse -");
     private JButton ajoutBalle = new JButton("   Balle +   ");
@@ -19,17 +22,23 @@ public class PAMS extends JFrame {
     private JLabel test = new JLabel("LABEL TEST");
     private JLabel test2 = new JLabel("LABEL TEST2");
     private JLabel test3 = new JLabel("LABEL TEST3");
-    private JPanel dessin;
+
+    private BubblesPanel canvas;
+    private PhysicsEngine physics;
+    private SoundEngine sound;
 
     public PAMS() {
         super();
 
-        // Préparer la fenêtre pour l'affichage, puis l'afficher.
-        JPanel panel = setupWindow();
+        // Démarrer les sous-systèmes.
+        physics = new PhysicsEngine();
+        canvas = setupCanvas();
+        sound = new SoundEngine();
+        sound.start();
 
-        // Lancer la simulation.
-        simulation = new Simulation(panel);
-        simulation.run();
+        // Affiche la fenêtre et lancer la simulation.
+        setVisible(true);
+        run();
     }
 
     public static void main(String[] args) {
@@ -39,13 +48,13 @@ public class PAMS extends JFrame {
     /**
      * Initialise tous les composants de la fenêtre et l'affiche.
      */
-    private JPanel setupWindow() {
+    private BubblesPanel setupCanvas() {
         principal = new BorderLayout();
-        Container content = this.getContentPane();
+        Container content = getContentPane();
         content.setLayout(principal);
-        this.setSize(new Dimension(DIMENSIONS[0], DIMENSIONS[1]));
-        this.setTitle(TITLE);
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setSize(new Dimension(DIMENSIONS[0], DIMENSIONS[1]));
+        setTitle(TITLE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Division de la fenetre en trois colonnes
 
@@ -68,60 +77,52 @@ public class PAMS extends JFrame {
         colonne.add(ligneVitesse);
         colonne.add(ligneAjout);
 
-
         vitessePlus.addActionListener(new VitessePlusListener());
         vitesseMoins.addActionListener(new VitesseMoinsListener());
         ajoutBalle.addActionListener(new AjoutBalleListener());
         retraitBalle.addActionListener(new RetraitBalleListener());
 
-        //donne a l'ecriture la couleur bleue
-        //vitessePlus.setForeground(Color.blue);
-        //vitessePlus.setBackground(Color.blue);
+        content.add(colonne, BorderLayout.EAST);
+        content.add(test, BorderLayout.SOUTH);
+        content.add(test3, BorderLayout.WEST);
 
-
-        this.getContentPane().add(colonne, BorderLayout.EAST);
-
-        this.getContentPane().add(test, BorderLayout.SOUTH);
-        // this.getContentPane().add(test2, BorderLayout.SOUTH);
-        this.getContentPane().add(test3, BorderLayout.WEST);
-
-        dessin = new JPanel();
-        dessin.setSize(300, 200);
-        this.getContentPane().add(dessin, BorderLayout.CENTER);
-
-        // creation d'une barre de menu
+        // Création d'une barre de menu
         JMenuBar barreMenu = new JMenuBar();
-
-        this.getContentPane().add(barreMenu, BorderLayout.NORTH);
-
         JMenu fichierMenu = new JMenu("Fichier");
         JMenu editionMenu = new JMenu("Edition");
-        barreMenu.add(fichierMenu);
-        barreMenu.add(editionMenu);
-
-        // creation des items du menu
         JMenuItem nouveau = new JMenuItem("Nouveau");
         JMenuItem quitter = new JMenuItem("Quitter");
         JMenuItem sauvegarder = new JMenuItem("Sauvegarder");
 
+        // Ajout du menu.
+        content.add(barreMenu, BorderLayout.NORTH);
+        barreMenu.add(fichierMenu);
+        barreMenu.add(editionMenu);
         fichierMenu.add(nouveau);
         fichierMenu.add(quitter);
         editionMenu.add(sauvegarder);
 
-        this.setVisible(true);
+        BubblesPanel panel = new BubblesPanel(physics, 300, 200);
+        content.add(panel, BorderLayout.CENTER);
 
-
-        return dessin;
+        return panel;
     }
 
-    public void paint(Graphics g) {
-        super.paint(g);
-        Graphics g1 = dessin.getGraphics();
-        g1.setColor(Color.blue);
-        g1.fillRect(0, 0, 1000, 1000);
+    public void run() {
+        double delta;
+        double previous = new Date().getTime();
 
-        //g.drawRect(0,0,getSize().width - 1,getSize().height - 1);
-        //g.drawString(message,50,150);
+        while (true) {
+            // Mettre à jour le temps écoulé.
+            delta = new Date().getTime() - previous;
+            previous = new Date().getTime();
+
+            // Mettre à jour la simulation physique.
+            physics.update(delta);
+
+            // Mettre à jour le canvas.
+            canvas.repaint();
+        }
     }
 
     public class VitessePlusListener implements ActionListener {
@@ -129,19 +130,16 @@ public class PAMS extends JFrame {
             vitesse = vitesse + 1;
             test.setText("la vitesse +1");
         }
-
     }
 
     public class VitesseMoinsListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            if (vitesse >= 1) { // je veux que les balles soient toujours en mouvement
-                vitesse = vitesse - 1;
+            if (vitesse >= 1) {
+                vitesse--;
                 test.setText("la vitesse -1");
-            } else {
+            } else
                 test.setText("la vitesse =1");
-            }
         }
-
     }
 
     public class AjoutBalleListener implements ActionListener {
@@ -149,18 +147,16 @@ public class PAMS extends JFrame {
             nombreBalle = nombreBalle + 1;
             test.setText("nombreBalle + 1");
         }
-
     }
 
     public class RetraitBalleListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            if (nombreBalle >= 1) { // je veux qu'il y ait toujours une balle
+            if (nombreBalle >= 1) {
                 nombreBalle = nombreBalle - 1;
                 test.setText("nombreBalle - 1");
-            } else {
-                test.setText("nombreBalle =1");
-            }
+            } else
+                test.setText("nombreBalle = 1");
         }
-
     }
+
 }

@@ -16,20 +16,27 @@ class PhysicsEngine {
         // Créer les murs.
         Color tint = new Color(0, 0, 0);
         walls = new Wall[]{
-                new Wall(10, 100, new Vector2d(-50, 0), tint),
-                new Wall(10, 100, new Vector2d(50, 0), tint),
-                new Wall(100, 10, new Vector2d(0, 50), tint),
-                new Wall(100, 10, new Vector2d(0, -50), tint)
+                new Wall(10, 200, BoundingBox.VERTICAL, new Vector2d(0, 100), tint),
+                new Wall(10, 200, BoundingBox.VERTICAL, new Vector2d(300, 100), tint),
+                new Wall(10, 300, BoundingBox.HORIZONTAL, new Vector2d(150, 0), tint),
+                new Wall(10, 300, BoundingBox.HORIZONTAL, new Vector2d(150, 200), tint)
         };
 
         // Créer les bulles initiales.
         bubbles = new ArrayList<Bubble>();
         for (int i = 0; i < NB_INITIAL_BUBBLES; i++)
-            bubbles.add(new Bubble(5.0, Vector2d.NULL, new Vector2d(5.0, 10.0)));
+            bubbles.add(new Bubble(2.0, new Vector2d(50, 50), new Vector2d(0.1, 0.1)));
+    }
+
+    public ArrayList<Bubble> getBubbles() {
+        return bubbles;
+    }
+
+    public Wall[] getWalls() {
+        return walls;
     }
 
     public void update(double delta) {
-
         Bubble bubble;
 
         for (int i = 0; i < bubbles.size(); i++) {
@@ -58,6 +65,7 @@ class PhysicsEngine {
                 if (intersection == null)
                     continue;
                 Vector2d nouvelleVitesse = bubble.getVitesse();
+                System.out.println(wall.getBounds().orientation());
                 if (wall.getBounds().orientation() == BoundingBox.VERTICAL)
                     nouvelleVitesse.x = -nouvelleVitesse.x;
                 else
