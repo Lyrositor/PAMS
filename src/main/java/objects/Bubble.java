@@ -14,11 +14,23 @@ public class Bubble extends PhysicsObject {
         this.radius = radius;
     }
 
+    private static Vector2d calcCollisionSpeed(Bubble bubble, Bubble otherBubble) {
+        double phi = Math.PI;
+        double theta1 = bubble.getSpeed().angle();
+        double theta2 = otherBubble.getSpeed().angle();
+        double v1 = bubble.getSpeed().norm();
+        double v2 = otherBubble.getSpeed().norm();
+        double m1 = bubble.getMass();
+        double m2 = otherBubble.getMass();
+        double common1 = (v1 * Math.cos(theta1 - phi) * (m1 - m2) + 2 * m2 * v2 * Math.cos(theta2 - phi)) / (m1 + m2);
+        double common2 = v1 * Math.sin(theta1 - phi);
+        return new Vector2d(
+                common1 * Math.cos(phi) + common2 * Math.cos(phi + Math.PI / 2),
+                common1 * Math.sin(phi) + common2 * Math.sin(phi + Math.PI / 2));
+    }
+
     public Color getColor() {
-        return new Color(
-                (int) (speed.norm() / 0.44 * 255),
-                (int) (speed.norm() / 0.66 * 255),
-                (int) (speed.norm() / 0.88 * 255));
+        return Color.red;
     }
 
     public double getRadius() {
@@ -29,9 +41,13 @@ public class Bubble extends PhysicsObject {
         return Math.PI * Math.pow(radius, 2) * DENSITY;
     }
 
-    public void collide(Bubble bubble, Vector2d position) {
+    public void collide(Bubble otherBubble, Vector2d position) {
+        speed = calcCollisionSpeed(this, otherBubble);
+        otherBubble.setSpeed(calcCollisionSpeed(otherBubble, this));
         //http://en.wikipedia.org/wiki/Elastic_collision
     }
+
+    // http://williamecraver.wix.com/elastic-equations
 
     public Vector2d intersects(Bubble otherBubble) {
         Vector2d otherBubblePosition = otherBubble.getPosition();

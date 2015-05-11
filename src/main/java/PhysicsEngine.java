@@ -65,7 +65,7 @@ class PhysicsEngine {
             }
         }
 
-        // Vérifier si la bulle intersecte un mur.
+        // Vérifier si la bulle entre en intersection avec un mur.
         for (int i = 0; i < bubbles.size(); i++) {
             bubble = bubbles.get(i);
             for (int j = 0; j < walls.length; j++)
