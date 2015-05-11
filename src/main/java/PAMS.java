@@ -32,8 +32,9 @@ public class PAMS extends JFrame {
 
         // Démarrer les sous-systèmes.
         physics = new PhysicsEngine();
-        canvas = setupCanvas();
         sound = new SoundEngine();
+        physics.addListener(sound);
+        canvas = setupCanvas();
 
         // Affiche la fenêtre et lancer la simulation.
         setVisible(true);

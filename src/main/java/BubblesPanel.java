@@ -25,7 +25,6 @@ class BubblesPanel extends JPanel {
         buffer = arrierePlan.getGraphics();
 
         Toolkit T = Toolkit.getDefaultToolkit();
-        wall = T.getImage("room.jpg");
     }
 
     public void paint(Graphics g) {
@@ -34,7 +33,6 @@ class BubblesPanel extends JPanel {
         Wall[] walls = physics.getWalls();
 
         g.drawImage(arrierePlan, 0, 0, this);
-        buffer.drawImage(wall, 0, 0, this);
 
         // Dessine toutes les bulles dans le buffer.
         for (int k = 0; k < bubbles.size(); k++) {
@@ -52,7 +50,7 @@ class BubblesPanel extends JPanel {
             Wall w = walls[k];
             Vector2d pos = w.getPosition();
             Vector2d dim = w.getDimensions();
-            g.setColor(Color.blue);
+            g.setColor(w.getColor());
             g.fillRect((int) pos.x, (int) pos.y, (int) dim.x, (int) dim.y);
         }
     }

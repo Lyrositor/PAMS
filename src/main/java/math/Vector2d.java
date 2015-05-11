@@ -27,6 +27,10 @@ public class Vector2d {
         return new Vector2d(x * k, y * k);
     }
 
+    public boolean equals(Vector2d vector2) {
+        return x == vector2.x && y == vector2.y;
+    }
+
     public double norm() {
         return Math.sqrt(this.norm2());
     }

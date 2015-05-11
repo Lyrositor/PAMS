@@ -30,7 +30,10 @@ public class Bubble extends PhysicsObject {
     }
 
     public Color getColor() {
-        return Color.red;
+        return new Color(
+                (int) (30 + radius / 25 * 225),
+                (int) (70 + radius / 25 * 185),
+                (int) (110 + radius / 25 * 145));
     }
 
     public double getRadius() {
@@ -55,6 +58,7 @@ public class Bubble extends PhysicsObject {
 
         if (diff.norm() <= radius + otherBubble.getRadius())
             return diff.setNorm(radius);
+
         return null;
     }
 

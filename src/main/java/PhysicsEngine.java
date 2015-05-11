@@ -7,9 +7,10 @@ import java.util.ArrayList;
 
 class PhysicsEngine {
 
-    private static final int NUM_INITIAL_BUBBLES = 10;
+    private static final int NUM_INITIAL_BUBBLES = 5;
     private Wall[] walls;
     private ArrayList<Bubble> bubbles;
+    private ArrayList<PhysicsListener> listeners = new ArrayList<PhysicsListener>();
 
     public PhysicsEngine() {
         // Créer les murs.
@@ -32,6 +33,10 @@ class PhysicsEngine {
                     Math.random() * 0.2, Math.random() * 0.2);
             bubbles.add(new Bubble(size, position, speed));
         }
+    }
+
+    public void addListener(PhysicsListener newListener) {
+        listeners.add(newListener);
     }
 
     public ArrayList<Bubble> getBubbles() {
@@ -59,9 +64,13 @@ class PhysicsEngine {
             for (int j = i + 1; j < bubbles.size(); j++) {
                 otherBubble = bubbles.get(j);
                 Vector2d intersection = bubble.intersects(otherBubble);
-                if (intersection == null)
-                    continue;
-                bubble.collide(otherBubble, intersection);
+                if (intersection != null) {
+                    Vector2d oldSpeed = bubble.getSpeed();
+                    bubble.collide(otherBubble, intersection);
+                    if (!oldSpeed.equals(bubble.getSpeed()))
+                        for (PhysicsListener listener : listeners)
+                            listener.bubbleToBubbleCollision();
+                }
             }
         }
 
@@ -69,8 +78,13 @@ class PhysicsEngine {
         for (int i = 0; i < bubbles.size(); i++) {
             bubble = bubbles.get(i);
             for (int j = 0; j < walls.length; j++)
-                if (bubble.intersects(walls[j]))
+                if (bubble.intersects(walls[j])) {
+                    Vector2d oldSpeed = bubble.getSpeed();
                     bubble.collide(walls[j]);
+                    if (!oldSpeed.equals(bubble.getSpeed()))
+                        for (PhysicsListener listener : listeners)
+                            listener.bubbleToWallCollision();
+                }
         }
     }
 
