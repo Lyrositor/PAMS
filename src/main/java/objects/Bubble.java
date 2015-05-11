@@ -15,7 +15,10 @@ public class Bubble extends PhysicsObject {
     }
 
     public Color getColor() {
-        return Color.red;
+        return new Color(
+                (int) (speed.norm() / 0.44 * 255),
+                (int) (speed.norm() / 0.66 * 255),
+                (int) (speed.norm() / 0.88 * 255));
     }
 
     public double getRadius() {
@@ -24,6 +27,10 @@ public class Bubble extends PhysicsObject {
 
     public double getMass() {
         return Math.PI * Math.pow(radius, 2) * DENSITY;
+    }
+
+    public void collide(Bubble bubble, Vector2d position) {
+        //http://en.wikipedia.org/wiki/Elastic_collision
     }
 
     public Vector2d intersects(Bubble otherBubble) {
@@ -35,10 +42,21 @@ public class Bubble extends PhysicsObject {
         return null;
     }
 
+
+    public void collide(Wall wall) {
+        Vector2d linePos = wall.getBoundsLine();
+        if (wall.isHorizontal()) {
+            double sign = Math.signum(linePos.y - position.y);
+            speed.y = -sign * Math.abs(speed.y);
+        } else {
+            double sign = Math.signum(linePos.x - position.x);
+            speed.x = -sign * Math.abs(speed.x);
+        }
+    }
+
     public boolean intersects(Wall wall) {
         Vector2d line = wall.getBoundsLine();
         Vector2d wallPos = wall.getPosition();
-        Vector2d diff = wallPos.sub(position);
 
         if (wall.isHorizontal() && Math.abs(line.y - position.y) <= radius) {
             return true;

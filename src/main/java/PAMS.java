@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class PAMS extends JFrame {
 
-    private static final int[] DIMENSIONS = {1000, 400};
+    private static final int[] DIMENSIONS = {1000, 500};
     private static final String TITLE = "PAMS";
 
     // Variables temporaires.
@@ -34,7 +34,6 @@ public class PAMS extends JFrame {
         physics = new PhysicsEngine();
         canvas = setupCanvas();
         sound = new SoundEngine();
-        sound.start();
 
         // Affiche la fenêtre et lancer la simulation.
         setVisible(true);
@@ -102,7 +101,7 @@ public class PAMS extends JFrame {
         fichierMenu.add(quitter);
         editionMenu.add(sauvegarder);
 
-        BubblesPanel panel = new BubblesPanel(physics, 300, 200);
+        BubblesPanel panel = new BubblesPanel(physics, 600, 400);
         content.add(panel, BorderLayout.CENTER);
 
         return panel;
