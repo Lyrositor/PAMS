@@ -25,8 +25,6 @@
         <module name="PAMS" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="PAMS" target="1.5" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8" />
   </component>
 </project>

@@ -15,20 +15,20 @@ public class Vector2d {
         this(.0, .0);
     }
 
-    public Vector2d add(Vector2d vector2) {
-        return new Vector2d(x + vector2.x, y + vector2.y);
+    public Vector2d add(Vector2d otherVector) {
+        return new Vector2d(x + otherVector.x, y + otherVector.y);
     }
 
-    public Vector2d sub(Vector2d vector2) {
-        return new Vector2d(x - vector2.x, y - vector2.y);
+    public Vector2d sub(Vector2d otherVector) {
+        return new Vector2d(x - otherVector.x, y - otherVector.y);
     }
 
     public Vector2d multiply(double k) {
         return new Vector2d(x * k, y * k);
     }
 
-    public boolean equals(Vector2d vector2) {
-        return x == vector2.x && y == vector2.y;
+    public boolean equals(Vector2d otherVector) {
+        return x == otherVector.x && y == otherVector.y;
     }
 
     public double norm() {
@@ -48,4 +48,7 @@ public class Vector2d {
         return new Vector2d(k * x, k * y);
     }
 
+    public double scalar(Vector2d otherVector) {
+        return x * otherVector.x + y * otherVector.y;
+    }
 }
