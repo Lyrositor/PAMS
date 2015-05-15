@@ -1,4 +1,4 @@
-public interface PhysicsListener {
+interface PhysicsListener {
     void bubbleToBubbleCollision();
 
     void bubbleToWallCollision();

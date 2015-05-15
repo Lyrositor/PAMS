@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-public class PAMSFrame {
+class PAMSFrame {
     public JTabbedPane tabbedPane;
     public JSlider slider1;
     public JSlider slider2;

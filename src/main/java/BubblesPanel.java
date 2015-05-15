@@ -9,7 +9,7 @@ import java.util.List;
 
 class BubblesPanel extends JPanel {
 
-    private Graphics buffer;
+    private Graphics2D buffer;
     private BufferedImage arrierePlan;
     private Image wall;
 
@@ -22,46 +22,39 @@ class BubblesPanel extends JPanel {
         setSize(dim[0], dim[1]);
 
         arrierePlan = new BufferedImage(dim[0], dim[1], BufferedImage.TYPE_INT_RGB);
-        buffer = arrierePlan.getGraphics();
-
-        Toolkit T = Toolkit.getDefaultToolkit();
+        buffer = arrierePlan.createGraphics();
+        RenderingHints hints = new RenderingHints(
+                RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        buffer.setRenderingHints(hints);
     }
 
     public void paint(Graphics g) {
         super.paint(g);
 
-        // Configurer l'outil de dessin.
-        Graphics2D g2d = (Graphics2D) g.create();
-        RenderingHints hints = new RenderingHints(
-                RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHints(hints);
-
         List<Bubble> bubbles = physics.getBubbles();
         Wall[] walls = physics.getWalls();
 
-        g2d.drawImage(arrierePlan, 0, 0, this);
-
         // Dessine toutes les bulles dans le buffer.
-        for (int k = 0; k < bubbles.size(); k++) {
-            Bubble b = bubbles.get(k);
+        buffer.setBackground(new Color(255, 255, 255, 0));
+        buffer.clearRect(0, 0, arrierePlan.getWidth(), arrierePlan.getHeight());
+        for (Bubble b : bubbles) {
             Vector2d pos = b.getPosition();
             double rayon = b.getRadius();
-            g2d.setColor(b.getColor());
-            g2d.fillOval(
+            buffer.setColor(b.getColor());
+            buffer.fillOval(
                     (int) Math.round(pos.x - rayon), (int) Math.round(pos.y - rayon),
                     (int) b.getRadius() * 2, (int) b.getRadius() * 2);
         }
 
         // Dessine tous les murs dans le buffer.
-        for (int k = 0; k < walls.length; k++) {
-            Wall w = walls[k];
-            Vector2d pos = w.getPosition();
-            Vector2d dim = w.getDimensions();
-            g2d.setColor(w.getColor());
-            g2d.fillRect((int) pos.x, (int) pos.y, (int) dim.x, (int) dim.y);
+        for (Wall wall : walls) {
+            Vector2d pos = wall.getPosition();
+            Vector2d dim = wall.getDimensions();
+            buffer.setColor(wall.getColor());
+            buffer.fillRect((int) pos.x, (int) pos.y, (int) dim.x, (int) dim.y);
         }
 
-        g2d.dispose();
+        g.drawImage(arrierePlan, 0, 0, this);
     }
 
 }

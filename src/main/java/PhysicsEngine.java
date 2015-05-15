@@ -10,8 +10,8 @@ class PhysicsEngine {
 
     private static final int NUM_INITIAL_BUBBLES = 1;
     private Wall[] walls;
-    private List bubbles;
-    private ArrayList<PhysicsListener> listeners = new ArrayList<PhysicsListener>();
+    private List<Bubble> bubbles;
+    private ArrayList<PhysicsListener> listeners = new ArrayList<>();
 
     public PhysicsEngine(int[] dim) {
         // Créer les murs.
@@ -25,7 +25,7 @@ class PhysicsEngine {
         };
 
         // Créer les bulles initiales.
-        bubbles = Collections.synchronizedList(new ArrayList<Bubble>());
+        bubbles = Collections.synchronizedList(new ArrayList<>());
         addBubbles(NUM_INITIAL_BUBBLES);
     }
 
@@ -92,8 +92,7 @@ class PhysicsEngine {
                         Vector2d oldSpeed = bubble.getSpeed();
                         bubble.collide(otherBubble, intersection);
                         if (!oldSpeed.equals(bubble.getSpeed()))
-                            for (PhysicsListener listener : listeners)
-                                listener.bubbleToBubbleCollision();
+                            listeners.forEach(PhysicsListener::bubbleToBubbleCollision);
                     }
                 }
             }
@@ -102,13 +101,12 @@ class PhysicsEngine {
             i = bubbles.listIterator();
             while (i.hasNext()) {
                 bubble = i.next();
-                for (int j = 0; j < walls.length; j++)
-                    if (bubble.intersects(walls[j])) {
+                for (Wall wall : walls)
+                    if (bubble.intersects(wall)) {
                         Vector2d oldSpeed = bubble.getSpeed();
-                        bubble.collide(walls[j]);
+                        bubble.collide(wall);
                         if (!oldSpeed.equals(bubble.getSpeed()))
-                            for (PhysicsListener listener : listeners)
-                                listener.bubbleToWallCollision();
+                            listeners.forEach(PhysicsListener::bubbleToWallCollision);
                     }
             }
         }

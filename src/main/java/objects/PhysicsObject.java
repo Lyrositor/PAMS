@@ -2,7 +2,7 @@ package objects;
 
 import math.Vector2d;
 
-public class PhysicsObject {
+class PhysicsObject {
 
     protected Vector2d position;
     protected Vector2d speed;

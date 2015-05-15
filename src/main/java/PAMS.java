@@ -3,7 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 
-public class PAMS {
+class PAMS {
 
     private static final int[] DIMENSIONS = {640, 480};
     private static final String TITLE = "PAMS";
@@ -14,7 +14,7 @@ public class PAMS {
     private SoundEngine sound;
     private BubblesPanel canvas;
 
-    public PAMS() {
+    private PAMS() {
         // Initialiser les sous-systèmes.
         physics = new PhysicsEngine(DIMENSIONS);
         sound = new SoundEngine();
@@ -32,7 +32,7 @@ public class PAMS {
         main = new JFrame(TITLE);
         frame = new PAMSFrame(canvas);
         main.setResizable(false);
-        main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        main.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         main.setContentPane(frame.rootPanel);
         setupMenu();
         setupListeners();
@@ -65,7 +65,7 @@ public class PAMS {
         frame.removeBubblesButton.addActionListener(nbListener);
     }
 
-    public void run() {
+    private void run() {
         double delta;
         double previous = new Date().getTime();
 
@@ -82,7 +82,7 @@ public class PAMS {
         }
     }
 
-    class BubblesNumberListener implements ActionListener {
+    private class BubblesNumberListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
                 case "+":
@@ -95,7 +95,7 @@ public class PAMS {
         }
     }
 
-    class BubblesSpeedListener implements ActionListener {
+    private class BubblesSpeedListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
                 case "+":
