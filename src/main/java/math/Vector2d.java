@@ -51,4 +51,8 @@ public class Vector2d {
     public double scalar(Vector2d otherVector) {
         return x * otherVector.x + y * otherVector.y;
     }
+
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
 }

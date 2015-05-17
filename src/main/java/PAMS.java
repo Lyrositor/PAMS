@@ -1,7 +1,8 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
+import java.awt.event.WindowEvent;
 
 class PAMS {
 
@@ -61,23 +62,39 @@ class PAMS {
 
     private void setupListeners() {
         BubblesNumberListener nbListener = new BubblesNumberListener();
+        BubblesSpeedListener speedListener = new BubblesSpeedListener();
+        MenuFichierListener fichierListener = new MenuFichierListener();
+
         frame.addBubblesButton.addActionListener(nbListener);
         frame.removeBubblesButton.addActionListener(nbListener);
+        frame.increaseSpeedButton.addActionListener(speedListener);
+        frame.decreaseSpeedButton.addActionListener(speedListener);
+        for (Component m : main.getJMenuBar().getMenu(0).getMenuComponents())
+            ((JMenuItem) m).addActionListener(fichierListener);
     }
 
     private void run() {
-        double delta;
-        double previous = new Date().getTime();
+        final int dt = 10 * 1000;
+
+        long currentTime = System.nanoTime();
+        long newTime;
+        long frameTime;
+        long accumulator = (long) 0.0;
 
         while (true) {
             // Mettre à jour le temps écoulé.
-            delta = new Date().getTime() - previous;
-            previous = new Date().getTime();
+            newTime = System.nanoTime();
+            frameTime = Math.min(newTime - currentTime, 25 * dt);
+            currentTime = newTime;
+            accumulator += frameTime;
 
-            // Mettre à jour la simulation physique.
-            physics.update(delta);
+            // Actualiser la simulation physique.
+            while (accumulator >= dt) {
+                physics.update(dt / 1E9);
+                accumulator -= dt;
+            }
 
-            // Mettre à jour le canvas.
+            // Re-dessiner les bulles.
             canvas.repaint();
         }
     }
@@ -99,8 +116,21 @@ class PAMS {
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
                 case "+":
+                    physics.adjustSpeed(100);
                     break;
                 case "-":
+                    physics.adjustSpeed(-100);
+                    break;
+            }
+        }
+    }
+
+    private class MenuFichierListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            System.out.println(e.getActionCommand());
+            switch (e.getActionCommand()) {
+                case "Quitter":
+                    main.dispatchEvent(new WindowEvent(main, WindowEvent.WINDOW_CLOSING));
                     break;
             }
         }

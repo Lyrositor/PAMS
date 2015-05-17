@@ -36,7 +36,7 @@ class PhysicsEngine {
                 Vector2d position = new Vector2d(
                         Math.random() * 200 + 50, Math.random() * 100 + 50);
                 Vector2d speed = new Vector2d(
-                        Math.random() * 0.2, Math.random() * 0.2);
+                        Math.random(), Math.random()).multiply(500);
                 bubbles.add(new Bubble(size, position, speed));
             }
         }
@@ -49,6 +49,17 @@ class PhysicsEngine {
             while (i.hasNext() && i.nextIndex() > lastIndex) {
                 i.next();
                 i.remove();
+            }
+        }
+    }
+
+    public void adjustSpeed(double delta) {
+        synchronized (bubbles) {
+            ListIterator<Bubble> i = bubbles.listIterator();
+            while (i.hasNext()) {
+                Bubble bubble = i.next();
+                Vector2d speed = bubble.getSpeed();
+                bubble.setSpeed(speed.setNorm(Math.max(1, speed.norm() + delta)));
             }
         }
     }

@@ -28,6 +28,7 @@ class BubblesPanel extends JPanel {
         buffer.setRenderingHints(hints);
     }
 
+    @Override
     public void paint(Graphics g) {
         super.paint(g);
 
