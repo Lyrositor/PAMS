@@ -25,7 +25,7 @@ class PhysicsEngine {
         };
 
         // Créer les bulles initiales.
-        bubbles = Collections.synchronizedList(new ArrayList<>());
+        bubbles = Collections.synchronizedList(new ArrayList<Bubble>());
         addBubbles(NUM_INITIAL_BUBBLES);
     }
 

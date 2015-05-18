@@ -3,6 +3,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 class PAMS {
 
@@ -127,12 +131,29 @@ class PAMS {
 
     private class MenuFichierListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            System.out.println(e.getActionCommand());
             switch (e.getActionCommand()) {
+                case "Sauvegarder":
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setDialogTitle("Specify a file to save");
+                    File file = fileChooser.getSelectedFile();
+                    int userSelection = fileChooser.showSaveDialog(null);
+                    if (userSelection == JFileChooser.APPROVE_OPTION) {
+
+                    }else {
+                        JOptionPane.showMessageDialog(null, "File save has been canceled");
+                    }
+                    break;
                 case "Quitter":
                     main.dispatchEvent(new WindowEvent(main, WindowEvent.WINDOW_CLOSING));
+                    break;
+                case "Nouveau":
+                    //remove.Bubbles;
+                    //remove.SoundEngine;
                     break;
             }
         }
     }
+
+
+
 }
