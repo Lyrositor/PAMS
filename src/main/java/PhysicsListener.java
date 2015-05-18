@@ -1,5 +1,7 @@
-interface PhysicsListener {
-    void bubbleToBubbleCollision();
+import objects.Bubble;
 
-    void bubbleToWallCollision();
+interface PhysicsListener {
+    void bubbleToBubbleCollision(Bubble bubble, Bubble otherBubble);
+
+    void bubbleToWallCollision(Bubble bubble);
 }

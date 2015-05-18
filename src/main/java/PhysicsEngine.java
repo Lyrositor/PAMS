@@ -29,10 +29,15 @@ class PhysicsEngine {
         addBubbles(NUM_INITIAL_BUBBLES);
     }
 
+    /**
+     * Ajoute un certain nombre de bulles à la simulation.
+     *
+     * @param count Le nombre de bulles à ajouter.
+     */
     public void addBubbles(int count) {
         synchronized (bubbles) {
             for (int i = 0; i < count; i++) {
-                double size = 5.0 + Math.random() * 20.0;
+                double size = Bubble.MAX_RADIUS * (0.8 * Math.random() + 0.2);
                 Vector2d position = new Vector2d(
                         Math.random() * 200 + 50, Math.random() * 100 + 50);
                 Vector2d speed = new Vector2d(
@@ -42,7 +47,13 @@ class PhysicsEngine {
         }
     }
 
+    /**
+     * Enlève un certain nombre de bubbles à la simulation.
+     * @param count Le nombre de bubbles à enlever.
+     */
     public void removeBubbles(int count) {
+        if (bubbles.size() == 0)
+            return;
         int lastIndex = bubbles.size() - count - 1;
         synchronized (bubbles) {
             ListIterator<Bubble> i = bubbles.listIterator(bubbles.size() - 1);
@@ -53,6 +64,10 @@ class PhysicsEngine {
         }
     }
 
+    /**
+     * Ajuste la vitesse de toutes les bulles.
+     * @param delta La variation de vitesse à appliquer (en norme).
+     */
     public void adjustSpeed(double delta) {
         synchronized (bubbles) {
             ListIterator<Bubble> i = bubbles.listIterator();
@@ -64,6 +79,10 @@ class PhysicsEngine {
         }
     }
 
+    /**
+     * Ajoute un PhysicsListener à signaler lors d'un événement physique.
+     * @param newListener Le PhysicsListener à ajouter.
+     */
     public void addListener(PhysicsListener newListener) {
         listeners.add(newListener);
     }
@@ -102,8 +121,10 @@ class PhysicsEngine {
                     if (intersection != null) {
                         Vector2d oldSpeed = bubble.getSpeed();
                         bubble.collide(otherBubble, intersection);
-                        if (!oldSpeed.equals(bubble.getSpeed()))
-                            listeners.forEach(PhysicsListener::bubbleToBubbleCollision);
+                        if (!oldSpeed.equals(bubble.getSpeed())) {
+                            for (PhysicsListener l : listeners)
+                                l.bubbleToBubbleCollision(bubble, otherBubble);
+                        }
                     }
                 }
             }
@@ -116,8 +137,10 @@ class PhysicsEngine {
                     if (bubble.intersects(wall)) {
                         Vector2d oldSpeed = bubble.getSpeed();
                         bubble.collide(wall);
-                        if (!oldSpeed.equals(bubble.getSpeed()))
-                            listeners.forEach(PhysicsListener::bubbleToWallCollision);
+                        if (!oldSpeed.equals(bubble.getSpeed())) {
+                            for (PhysicsListener l : listeners)
+                                l.bubbleToWallCollision(bubble);
+                        }
                     }
             }
         }
