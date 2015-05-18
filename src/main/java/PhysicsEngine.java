@@ -38,11 +38,14 @@ class PhysicsEngine {
         synchronized (bubbles) {
             for (int i = 0; i < count; i++) {
                 double size = Bubble.MAX_RADIUS * (0.8 * Math.random() + 0.2);
-                Vector2d position = new Vector2d(
-                        Math.random() * 200 + 50, Math.random() * 100 + 50);
+                do {
+                    Vector2d center = new Vector2d(Math.random() * 200 + 50, Math.random() * 200 + 50);
+                } while (isEmptySpace(center, size));
+                //Vector2d position = new Vector2d(
+                //  Math.random() * 200 + 50, Math.random() * 100 + 50);
                 Vector2d speed = new Vector2d(
                         Math.random(), Math.random()).multiply(Bubble.MAX_SPEED);
-                bubbles.add(new Bubble(size, position, speed));
+                bubbles.add(new Bubble(size, center, speed));
             }
         }
     }
@@ -144,6 +147,14 @@ class PhysicsEngine {
                     }
             }
         }
+    }
+
+
+    public boolean isEmptySpace(Vector2d center, double radius) {
+        for (Bubble b : bubbles)
+            if (b.intersects(center, radius))
+                return false;
+        return true;
     }
 
 }

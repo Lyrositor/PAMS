@@ -45,6 +45,11 @@ public class Bubble extends PhysicsObject {
         super.setSpeed(newSpeed.getNormed(Math.min(newSpeed.norm(), MAX_SPEED)));
     }
 
+    public boolean intersects(Vector2d otherOrigin, double otherRadius) {
+        Vector2d diff = otherOrigin.sub(position);
+        return diff.norm() <= radius + otherRadius;
+    }
+
     public Vector2d intersects(Bubble otherBubble) {
         Vector2d otherBubblePosition = otherBubble.getPosition();
         Vector2d diff = otherBubblePosition.sub(position);
@@ -61,9 +66,6 @@ public class Bubble extends PhysicsObject {
         otherBubble.setPosition(newPosition);
         speed = calcCollisionSpeed(this, otherBubble);
         otherBubble.setSpeed(calcCollisionSpeed(otherBubble, this));
-        // http://en.wikipedia.org/wiki/Elastic_collision
-        // http://williamecraver.wix.com/elastic-equations
-        // http://www.science-calculators.org/mechanics/collisions/
     }
 
     public boolean intersects(Wall wall) {
