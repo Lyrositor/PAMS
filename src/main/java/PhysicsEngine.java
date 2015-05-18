@@ -41,7 +41,7 @@ class PhysicsEngine {
                 Vector2d position = new Vector2d(
                         Math.random() * 200 + 50, Math.random() * 100 + 50);
                 Vector2d speed = new Vector2d(
-                        Math.random(), Math.random()).multiply(500);
+                        Math.random(), Math.random()).multiply(Bubble.MAX_SPEED);
                 bubbles.add(new Bubble(size, position, speed));
             }
         }
@@ -74,7 +74,7 @@ class PhysicsEngine {
             while (i.hasNext()) {
                 Bubble bubble = i.next();
                 Vector2d speed = bubble.getSpeed();
-                bubble.setSpeed(speed.setNorm(Math.max(1, speed.norm() + delta)));
+                bubble.setSpeed(speed.getNormed(Math.max(1, speed.norm() + delta)));
             }
         }
     }
@@ -120,7 +120,7 @@ class PhysicsEngine {
                     Vector2d intersection = bubble.intersects(otherBubble);
                     if (intersection != null) {
                         Vector2d oldSpeed = bubble.getSpeed();
-                        bubble.collide(otherBubble, intersection);
+                        bubble.collide(otherBubble);
                         if (!oldSpeed.equals(bubble.getSpeed())) {
                             for (PhysicsListener l : listeners)
                                 l.bubbleToBubbleCollision(bubble, otherBubble);

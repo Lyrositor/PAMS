@@ -7,11 +7,14 @@ import java.awt.*;
 public class Bubble extends PhysicsObject {
 
     public static final double MAX_RADIUS = 25.0;
-    private static final double DENSITY = 7.0;
+    public static final double MAX_SPEED = 500;
+    public static final double DENSITY = 7.0;
+
     private double radius;
 
     public Bubble(double radius, Vector2d position, Vector2d speed) {
         super(position, speed);
+        setSpeed(speed);
         this.radius = radius;
     }
 
@@ -38,17 +41,24 @@ public class Bubble extends PhysicsObject {
         return Math.PI * Math.pow(radius, 2) * DENSITY;
     }
 
+    public void setSpeed(Vector2d newSpeed) {
+        super.setSpeed(newSpeed.getNormed(Math.min(newSpeed.norm(), MAX_SPEED)));
+    }
+
     public Vector2d intersects(Bubble otherBubble) {
         Vector2d otherBubblePosition = otherBubble.getPosition();
         Vector2d diff = otherBubblePosition.sub(position);
 
         if (diff.norm() <= radius + otherBubble.getRadius())
-            return diff.setNorm(radius);
+            return diff.getNormed(radius);
 
         return null;
     }
 
-    public void collide(Bubble otherBubble, Vector2d position) {
+    public void collide(Bubble otherBubble) {
+        Vector2d diff = otherBubble.getPosition().sub(position);
+        Vector2d newPosition = position.add(diff.getNormed(radius + otherBubble.getRadius()));
+        otherBubble.setPosition(newPosition);
         speed = calcCollisionSpeed(this, otherBubble);
         otherBubble.setSpeed(calcCollisionSpeed(otherBubble, this));
         // http://en.wikipedia.org/wiki/Elastic_collision

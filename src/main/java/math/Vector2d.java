@@ -43,9 +43,9 @@ public class Vector2d {
         return Math.atan2(y, x);
     }
 
-    public Vector2d setNorm(double length) {
+    public Vector2d getNormed(double length) {
         double k = Math.sqrt(length / norm());
-        return new Vector2d(k * x, k * y);
+        return multiply(k);
     }
 
     public double scalar(Vector2d otherVector) {
