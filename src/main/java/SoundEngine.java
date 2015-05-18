@@ -28,7 +28,7 @@ class SoundEngine implements PhysicsListener {
     }
 
     public void bubbleToWallCollision(Bubble bubble) {
-        soundThreadPool.execute(new BubbleSound(bubble));
+        //soundThreadPool.execute(new BubbleSound(bubble));
     }
 
     private class BubbleSound implements Runnable {

@@ -80,11 +80,14 @@ public class Bubble extends PhysicsObject {
     public void collide(Wall wall) {
         Vector2d linePos = wall.getBoundsLine();
         if (wall.isHorizontal()) {
-            double sign = Math.signum(linePos.y - position.y);
-            speed.y = -sign * Math.abs(speed.y);
+            double sign = -Math.signum(linePos.y - position.y);
+            position.y = linePos.y + sign * radius;
+
+            speed.y = sign * Math.abs(speed.y);
         } else {
-            double sign = Math.signum(linePos.x - position.x);
-            speed.x = -sign * Math.abs(speed.x);
+            double sign = -Math.signum(linePos.x - position.x);
+            position.x = linePos.x + sign * radius;
+            speed.x = sign * Math.abs(speed.x);
         }
     }
 }
