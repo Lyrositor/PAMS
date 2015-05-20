@@ -15,20 +15,14 @@ public class Vector2d {
         this(.0, .0);
     }
 
-    public Vector2d add(Vector2d otherVector) {
-        return new Vector2d(x + otherVector.x, y + otherVector.y);
+    public double angle() {
+        return Math.atan2(y, x);
     }
 
-    public Vector2d sub(Vector2d otherVector) {
-        return new Vector2d(x - otherVector.x, y - otherVector.y);
-    }
-
-    public Vector2d multiply(double k) {
-        return new Vector2d(x * k, y * k);
-    }
-
-    public boolean equals(Vector2d otherVector) {
-        return x == otherVector.x && y == otherVector.y;
+    public void setAngle(double newAngle) {
+        double norm = norm();
+        x = norm * Math.cos(newAngle);
+        y = norm * Math.sin(newAngle);
     }
 
     public double norm() {
@@ -39,17 +33,38 @@ public class Vector2d {
         return Math.pow(x, 2) + Math.pow(y, 2);
     }
 
-    public double angle() {
-        return Math.atan2(y, x);
+    public void setNorm(double newNorm) {
+        double angle = angle();
+        x = newNorm * Math.cos(angle);
+        y = newNorm * Math.sin(angle);
     }
 
-    public Vector2d getNormed(double length) {
-        double k = Math.sqrt(length / norm());
-        return multiply(k);
+    public Vector2d sum(Vector2d otherVector) {
+        return new Vector2d(x + otherVector.x, y + otherVector.y);
+    }
+
+    public Vector2d sub(Vector2d otherVector) {
+        return new Vector2d(x - otherVector.x, y - otherVector.y);
+    }
+
+    public Vector2d product(double k) {
+        return new Vector2d(x * k, y * k);
     }
 
     public double scalar(Vector2d otherVector) {
         return x * otherVector.x + y * otherVector.y;
+    }
+
+    public boolean equals(Vector2d otherVector) {
+        return x == otherVector.x && y == otherVector.y;
+    }
+
+    public Vector2d getNormed(double newNorm) {
+        return product(Math.sqrt(newNorm / norm()));
+    }
+
+    public Vector2d getAngled(double newAngle) {
+        return new Vector2d(Math.cos(newAngle), Math.sin(newAngle)).product(norm());
     }
 
     public String toString() {

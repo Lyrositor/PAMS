@@ -23,7 +23,7 @@ public class Bubble extends PhysicsObject {
         Vector2d speedDiff = bubble.getSpeed().sub(otherBubble.getSpeed());
         double m1 = bubble.getMass();
         double m2 = otherBubble.getMass();
-        return bubble.getSpeed().sub(posDiff.multiply(2 * m2 / (m1 + m2) * posDiff.scalar(speedDiff) / posDiff.norm2()));
+        return bubble.getSpeed().sub(posDiff.product(2 * m2 / (m1 + m2) * posDiff.scalar(speedDiff) / posDiff.norm2()));
     }
 
     public Color getColor() {
@@ -62,7 +62,7 @@ public class Bubble extends PhysicsObject {
 
     public void collide(Bubble otherBubble) {
         Vector2d diff = otherBubble.getPosition().sub(position);
-        Vector2d newPosition = position.add(diff.getNormed(radius + otherBubble.getRadius()));
+        Vector2d newPosition = position.sum(diff.getNormed(radius + otherBubble.getRadius()));
         otherBubble.setPosition(newPosition);
         speed = calcCollisionSpeed(this, otherBubble);
         otherBubble.setSpeed(calcCollisionSpeed(otherBubble, this));

@@ -1,12 +1,10 @@
+import objects.Fan;
+
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.awt.event.*;
 
 class PAMS {
 
@@ -41,6 +39,20 @@ class PAMS {
         main.setContentPane(frame.rootPanel);
         setupMenu();
         setupListeners();
+        main.addComponentListener(new ComponentListener() {
+            public void componentResized(ComponentEvent e) {
+            }
+
+            public void componentMoved(ComponentEvent e) {
+                main.repaint();
+            }
+
+            public void componentShown(ComponentEvent e) {
+            }
+
+            public void componentHidden(ComponentEvent e) {
+            }
+        });
         main.pack();
         main.setVisible(true);
     }
@@ -68,6 +80,7 @@ class PAMS {
         BubblesNumberListener nbListener = new BubblesNumberListener();
         BubblesSpeedListener speedListener = new BubblesSpeedListener();
         MenuFichierListener fichierListener = new MenuFichierListener();
+        WindListener windListener = new WindListener();
 
         frame.addBubblesButton.addActionListener(nbListener);
         frame.removeBubblesButton.addActionListener(nbListener);
@@ -75,6 +88,9 @@ class PAMS {
         frame.decreaseSpeedButton.addActionListener(speedListener);
         for (Component m : main.getJMenuBar().getMenu(0).getMenuComponents())
             ((JMenuItem) m).addActionListener(fichierListener);
+
+        frame.intensitySlider.addChangeListener(windListener);
+        frame.angleSlider.addChangeListener(windListener);
     }
 
     private void run() {
@@ -134,26 +150,34 @@ class PAMS {
             switch (e.getActionCommand()) {
                 case "Sauvegarder":
                     JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setDialogTitle("Specify a file to save");
-                    File file = fileChooser.getSelectedFile();
-                    int userSelection = fileChooser.showSaveDialog(null);
+                    fileChooser.setDialogTitle("Save As...");
+                    int userSelection = fileChooser.showSaveDialog(main);
                     if (userSelection == JFileChooser.APPROVE_OPTION) {
-
-                    }else {
-                        JOptionPane.showMessageDialog(null, "File save has been canceled");
+                        sound.save(fileChooser.getSelectedFile());
                     }
                     break;
                 case "Quitter":
                     main.dispatchEvent(new WindowEvent(main, WindowEvent.WINDOW_CLOSING));
                     break;
                 case "Nouveau":
-                    //remove.Bubbles;
-                    //remove.SoundEngine;
+                    physics.removeBubbles(physics.getBubbleCount());
+                    sound.reset();
                     break;
             }
         }
     }
 
-
+    private class WindListener implements ChangeListener {
+        public void stateChanged(ChangeEvent e) {
+            Fan fan = physics.getFan();
+            double newIntensity = frame.intensitySlider.getValue();
+            fan.setIntensity(newIntensity);
+            fan.setAngle(frame.angleSlider.getValue() * Math.PI / 180);
+            if (newIntensity == 0)
+                frame.angleSlider.setEnabled(false);
+            else
+                frame.angleSlider.setEnabled(true);
+        }
+    }
 
 }

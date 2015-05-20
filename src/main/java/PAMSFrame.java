@@ -2,8 +2,8 @@ import javax.swing.*;
 
 class PAMSFrame {
     public JTabbedPane tabbedPane;
-    public JSlider slider1;
-    public JSlider slider2;
+    public JSlider angleSlider;
+    public JSlider intensitySlider;
     public JButton addBubblesButton;
     public JButton removeBubblesButton;
     public JButton increaseSpeedButton;
