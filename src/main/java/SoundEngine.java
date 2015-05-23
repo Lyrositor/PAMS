@@ -22,6 +22,10 @@ class SoundEngine implements PhysicsListener {
             InvalidMidiDataException {
         sequencer = MidiSystem.getSequencer();
         synthesizer = MidiSystem.getSynthesizer();
+
+        sequencer.open();
+        synthesizer.open();
+
         reset();
     }
 
@@ -34,25 +38,19 @@ class SoundEngine implements PhysicsListener {
     public void reset() throws MidiUnavailableException,
             InvalidMidiDataException {
         synchronized (sequencer) {
-            // Close the sequencer if it is currently running.
+            // Disable ongoing recordings.
             if (sequencer.isRecording()) {
-                sequencer.stopRecording();
                 sequencer.recordDisable(track1);
+                sequencer.stopRecording();
             }
-            if (sequencer.isOpen())
-                sequencer.close();
-            if (synthesizer.isOpen())
-                synthesizer.close();
 
             // Create a new sequence and start recording on it.
             Sequence sequence = new Sequence(Sequence.PPQ, 16);
             track1 = sequence.createTrack();
             sequencer.setSequence(sequence);
             sequencer.setTempoInBPM(TEMPO);
-            sequencer.open();
             sequencer.recordEnable(track1, -1);
             sequencer.startRecording();
-            synthesizer.open();
         }
     }
 

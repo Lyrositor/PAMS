@@ -155,8 +155,8 @@ class PAMS {
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             if (sound.save(fileChooser.getSelectedFile()))
                 JOptionPane.showMessageDialog(main,
-                        "Fichier enregistré : " + fileChooser.getSelectedFile().getName(),
-                        "Succès",
+                        "Fichier enregistrÃ© : " + fileChooser.getSelectedFile().getName(),
+                        "SuccÃ¨s",
                         JOptionPane.INFORMATION_MESSAGE);
             else
                 JOptionPane.showMessageDialog(main,
@@ -218,6 +218,7 @@ class PAMS {
                         System.err.println("ERROR: Failed to reset sound.");
                         ex.printStackTrace();
                     }
+                    physics.addBubbles(PhysicsEngine.NUM_INITIAL_BUBBLES);
                     break;
             }
         }

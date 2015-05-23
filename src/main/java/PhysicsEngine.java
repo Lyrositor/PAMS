@@ -9,7 +9,8 @@ import java.util.List;
 
 class PhysicsEngine {
 
-    private static final int NUM_INITIAL_BUBBLES = 3;
+    public static final int NUM_INITIAL_BUBBLES = 3;
+
     private final Fan fan;
     private final List<Bubble> bubbles;
     private final Wall[] walls;
@@ -62,17 +63,17 @@ class PhysicsEngine {
     /**
      * Removes a number of bubbles from the simulation.
      *
+     * The bubbles are removed in the order in which they were added (FIFO).
      * @param count The amount of bubbles to remove.
      */
     public void removeBubbles(int count) {
-        if (bubbles.size() == 0)
-            return;
-        int lastIndex = bubbles.size() - count - 1;
         synchronized (bubbles) {
-            ListIterator<Bubble> i = bubbles.listIterator(bubbles.size() - 1);
-            while (i.hasNext() && i.nextIndex() > lastIndex) {
+            ListIterator<Bubble> i = bubbles.listIterator();
+            int num = 0;
+            while (i.hasNext() && num < count) {
                 i.next();
                 i.remove();
+                num++;
             }
         }
     }
