@@ -11,6 +11,7 @@ class PAMS {
 
     private static final int[] DIMENSIONS = {1000, 600};
     private static final String TITLE = "PAMS";
+    private static final double DT = 0.01;
 
     private final JFrame main;
     private final PAMSFrame frame;
@@ -122,24 +123,22 @@ class PAMS {
      * drawing.
      */
     private void run() {
-        final int dt = 10 * 1000;
-
-        long currentTime = System.nanoTime();
-        long newTime;
-        long frameTime;
-        long accumulator = (long) 0.0;
+        double currentTime = System.nanoTime() / 1E9;
+        double newTime;
+        double frameTime;
+        double accumulator = 0;
 
         while (true) {
             // Update the elapsed time.
-            newTime = System.nanoTime();
-            frameTime = Math.min(newTime - currentTime, 25 * dt);
+            newTime = System.nanoTime() / 1E9;
+            frameTime = Math.min(newTime - currentTime, 25 * DT);
             currentTime = newTime;
             accumulator += frameTime;
 
             // Update the physics simulation.
-            while (accumulator >= dt) {
-                physics.update(dt / 1E9);
-                accumulator -= dt;
+            while (accumulator >= DT) {
+                physics.update(DT);
+                accumulator -= DT;
             }
 
             // Re-draw the bubbles.
