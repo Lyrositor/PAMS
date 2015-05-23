@@ -6,10 +6,10 @@ import java.awt.*;
 
 public class Wall extends PhysicsObject {
 
-    private Vector2d dimensions;
-    private Vector2d boundsLine;
-    private Color color;
-    private boolean isHorizontal;
+    private final Vector2d dimensions;
+    private final Vector2d boundsLine;
+    private final Color color;
+    private final boolean isHorizontal;
 
     public Wall(
             Vector2d dimensions, Vector2d position,

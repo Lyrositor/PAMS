@@ -16,7 +16,7 @@ class PAMSFrame {
     }
 
     private void createUIComponents() {
-        // Petit hack pour forcer les dimensions de la fenêtre.
+        // Small hack to force the dimensions of the window.
         canvas.setMinimumSize(canvas.getSize());
     }
 

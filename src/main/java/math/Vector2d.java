@@ -2,17 +2,13 @@ package math;
 
 public class Vector2d {
 
-    public static Vector2d NULL = new Vector2d();
+    public static final Vector2d NULL = new Vector2d(0, 0);
     public double x;
     public double y;
 
     public Vector2d(double x, double y) {
         this.x = x;
         this.y = y;
-    }
-
-    public Vector2d() {
-        this(.0, .0);
     }
 
     public double angle() {

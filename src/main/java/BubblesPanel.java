@@ -10,11 +10,9 @@ import java.util.List;
 
 class BubblesPanel extends JPanel {
 
-    private Graphics2D buffer;
-    private BufferedImage arrierePlan;
-    private Image wall;
-
-    private PhysicsEngine physics;
+    private final BufferedImage image;
+    private final Graphics2D buffer;
+    private final PhysicsEngine physics;
 
     /**
      * Create the panel, configuring its buffer.
@@ -28,8 +26,8 @@ class BubblesPanel extends JPanel {
 
         setSize(dim[0], dim[1]);
 
-        arrierePlan = new BufferedImage(dim[0], dim[1], BufferedImage.TYPE_INT_RGB);
-        buffer = arrierePlan.createGraphics();
+        image = new BufferedImage(dim[0], dim[1], BufferedImage.TYPE_INT_RGB);
+        buffer = image.createGraphics();
         RenderingHints hints = new RenderingHints(
                 RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         buffer.setRenderingHints(hints);
@@ -37,6 +35,7 @@ class BubblesPanel extends JPanel {
 
     /**
      * Redraws the panel with all of its elements.
+     *
      * @param g The Graphics instance passed by Swing.
      */
     @Override
@@ -44,17 +43,17 @@ class BubblesPanel extends JPanel {
         super.paint(g);
 
         buffer.setBackground(new Color(255, 255, 255, 0));
-        buffer.clearRect(0, 0, arrierePlan.getWidth(), arrierePlan.getHeight());
+        buffer.clearRect(0, 0, image.getWidth(), image.getHeight());
         drawFan();
         drawBubbles();
         drawWalls();
-        g.drawImage(arrierePlan, 0, 0, this);
+        g.drawImage(image, 0, 0, this);
     }
 
     /**
      * Draws a triangular fan on screen.
      */
-    public void drawFan() {
+    private void drawFan() {
         Fan fan = physics.getFan();
 
         // Draw the wind's cone.
@@ -65,23 +64,23 @@ class BubblesPanel extends JPanel {
             // The specified length is guaranteed to be superior to the panel's
             // size.
             buffer.setColor(fan.getConeColor());
-            int[][] coneCoords = fan.getConeCoordinates(
+            int[][] conePoints = fan.getConeCoordinates(
                     Math.pow(getWidth(), 2) + Math.pow(getHeight(), 2));
-            buffer.drawPolygon(coneCoords[0], coneCoords[1], coneCoords[0].length);
-            buffer.fillPolygon(coneCoords[0], coneCoords[1], coneCoords[0].length);
+            buffer.drawPolygon(conePoints[0], conePoints[1], conePoints[0].length);
+            buffer.fillPolygon(conePoints[0], conePoints[1], conePoints[0].length);
 
             // Draw the fan's symbol.
             buffer.setColor(fan.getFanColor());
-            int[][] fanCoords = fan.getFanCoordinates();
-            buffer.drawPolygon(fanCoords[0], fanCoords[1], fanCoords[0].length);
-            buffer.fillPolygon(fanCoords[0], fanCoords[1], fanCoords[0].length);
+            int[][] fanPoints = fan.getFanCoordinates();
+            buffer.drawPolygon(fanPoints[0], fanPoints[1], fanPoints[0].length);
+            buffer.fillPolygon(fanPoints[0], fanPoints[1], fanPoints[0].length);
         }
     }
 
     /**
      * Draws every bubble on screen.
      */
-    public void drawBubbles() {
+    private void drawBubbles() {
         List<Bubble> bubbles = physics.getBubbles();
         for (Bubble b : bubbles) {
             Vector2d pos = b.getPosition();
@@ -96,7 +95,7 @@ class BubblesPanel extends JPanel {
     /**
      * Draws every wall on screen.
      */
-    public void drawWalls() {
+    private void drawWalls() {
         Wall[] walls = physics.getWalls();
         for (Wall wall : walls) {
             Vector2d pos = wall.getPosition();

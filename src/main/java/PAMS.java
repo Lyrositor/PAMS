@@ -11,30 +11,36 @@ class PAMS {
     private static final int[] DIMENSIONS = {640, 480};
     private static final String TITLE = "PAMS";
 
-    private JFrame main;
-    private PAMSFrame frame;
-    private PhysicsEngine physics;
+    private final JFrame main;
+    private final PAMSFrame frame;
+    private final PhysicsEngine physics;
+    private final BubblesPanel canvas;
     private SoundEngine sound;
-    private BubblesPanel canvas;
 
     /**
      * Initialize all program components and show the window.
      */
     private PAMS() {
-        // Initialiser les sous-systèmes.
+        // Initialise the sub-systems.
         physics = new PhysicsEngine(DIMENSIONS);
-        sound = new SoundEngine();
+        try {
+            sound = new SoundEngine();
+        } catch (Exception e) {
+            System.err.println("ERROR: Failed to initialize MIDI interfaces.");
+            e.printStackTrace();
+            System.exit(0);
+        }
         physics.addListener(sound);
         canvas = new BubblesPanel(physics, DIMENSIONS);
 
-        // Choisir l'apparence par défaut du système d'exploitation.
+        // Choose the default appearance for the OS.
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
             System.err.println("ERROR: Failed to set system look and feel.");
         }
 
-        // Créer la fenêtre.
+        // Create the window.
         main = new JFrame(TITLE);
         frame = new PAMSFrame(canvas);
         main.setResizable(false);
@@ -60,6 +66,11 @@ class PAMS {
         main.setVisible(true);
     }
 
+    /**
+     * Launches the program and runs it.
+     *
+     * @param args Command-line arguments (unused).
+     */
     public static void main(String[] args) {
         PAMS app = new PAMS();
         app.run();
@@ -104,7 +115,7 @@ class PAMS {
 
     /**
      * Run the simulation forever.
-     * <p>
+     *
      * This uses a fixed time step for simulating, and a variable time step for
      * drawing.
      */
@@ -117,24 +128,46 @@ class PAMS {
         long accumulator = (long) 0.0;
 
         while (true) {
-            // Mettre à jour le temps écoulé.
+            // Update the elapsed time.
             newTime = System.nanoTime();
             frameTime = Math.min(newTime - currentTime, 25 * dt);
             currentTime = newTime;
             accumulator += frameTime;
 
-            // Actualiser la simulation physique.
+            // Update the physics simulation.
             while (accumulator >= dt) {
                 physics.update(dt / 1E9);
                 accumulator -= dt;
             }
 
-            // Re-dessiner les bulles.
+            // Re-draw the bubbles.
             canvas.repaint();
         }
     }
 
+    /**
+     * Saves the recorded audio to file.
+     */
+    private void saveAudioToFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Enregistrer sous...");
+        int userSelection = fileChooser.showSaveDialog(main);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            if (sound.save(fileChooser.getSelectedFile()))
+                JOptionPane.showMessageDialog(main,
+                        "Fichier enregistr� : " + fileChooser.getSelectedFile().getName(),
+                        "Succ�s",
+                        JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(main,
+                        "Erreur : impossible d'enregistrer le fichier.",
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private class BubblesNumberListener implements ActionListener {
+        @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
                 case "+":
@@ -148,6 +181,7 @@ class PAMS {
     }
 
     private class BubblesSpeedListener implements ActionListener {
+        @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
                 case "+":
@@ -161,15 +195,17 @@ class PAMS {
     }
 
     private class MenuFichierListener implements ActionListener {
+
+        /**
+         * Processes an menu click event.
+         *
+         * @param e The event to process.
+         */
+        @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
                 case "Sauvegarder":
-                    JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setDialogTitle("Save As...");
-                    int userSelection = fileChooser.showSaveDialog(main);
-                    if (userSelection == JFileChooser.APPROVE_OPTION) {
-                        sound.save(fileChooser.getSelectedFile());
-                    }
+                    saveAudioToFile();
                     break;
                 case "Quitter":
                     main.dispatchEvent(new WindowEvent(main, WindowEvent.WINDOW_CLOSING));
@@ -188,6 +224,7 @@ class PAMS {
     }
 
     private class WindListener implements ChangeListener {
+        @Override
         public void stateChanged(ChangeEvent e) {
             Fan fan = physics.getFan();
             double newIntensity = frame.intensitySlider.getValue();

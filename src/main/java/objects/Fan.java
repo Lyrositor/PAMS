@@ -4,11 +4,18 @@ import math.Vector2d;
 
 import java.awt.*;
 
+/**
+ * Represents a fan.
+ * <p>
+ * The fan is located in a point of the screen and blows air in a cone area in
+ * front of it, pushing bubbles away.
+ */
 public class Fan extends PhysicsObject {
 
-    public static double MAX_INTENSITY = 10;
-    private Color fanColor;
-    private Vector2d force;
+    public static final double MAX_INTENSITY = 10;
+
+    private final Color fanColor;
+    private final Vector2d force;
 
     public Fan(Vector2d position, Color color) {
         super(position, Vector2d.NULL);

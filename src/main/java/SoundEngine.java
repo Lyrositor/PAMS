@@ -8,21 +8,29 @@ class SoundEngine implements PhysicsListener {
     private static final int NOTE_LENGTH = 32;  // Half Note
     private static final int TEMPO = 120;
     private static final int VELOCITY = 64;  // Middle Volume
-    private Sequencer sequencer;
-    private Synthesizer synthesizer;
+    private final Sequencer sequencer;
+    private final Synthesizer synthesizer;
     private Track track1;
 
-    public SoundEngine() {
-        try {
-            sequencer = MidiSystem.getSequencer();
-            synthesizer = MidiSystem.getSynthesizer();
-            reset();
-        } catch (Exception e) {
-            System.err.println("ERROR: Failed to initialize MIDI interfaces.");
-            e.printStackTrace();
-        }
+    /**
+     * Prepares the sound engine for first-time use.
+     *
+     * @throws MidiUnavailableException
+     * @throws InvalidMidiDataException
+     */
+    public SoundEngine() throws MidiUnavailableException,
+            InvalidMidiDataException {
+        sequencer = MidiSystem.getSequencer();
+        synthesizer = MidiSystem.getSynthesizer();
+        reset();
     }
 
+    /**
+     * Erases existing recorded data and re-initializes all systems.
+     *
+     * @throws MidiUnavailableException
+     * @throws InvalidMidiDataException
+     */
     public void reset() throws MidiUnavailableException,
             InvalidMidiDataException {
         synchronized (sequencer) {
@@ -48,6 +56,12 @@ class SoundEngine implements PhysicsListener {
         }
     }
 
+    /**
+     * Saves record data to the specified file.
+     *
+     * @param file The file to save the data to.
+     * @return True if file write successful, false otherwise.
+     */
     public boolean save(File file) {
         Sequence sequence = sequencer.getSequence();
         int[] fileTypes = MidiSystem.getMidiFileTypes(sequence);
@@ -64,18 +78,41 @@ class SoundEngine implements PhysicsListener {
         return false;
     }
 
+    /**
+     * Called when a bubble collides into another bubble.
+     *
+     * @param bubble      The first colliding bubble.
+     * @param otherBubble The second colliding bubble.
+     */
+    @Override
     public void bubbleToBubbleCollision(Bubble bubble, Bubble otherBubble) {
     }
 
+    /**
+     * Called when a bubble collides into a wall.
+     *
+     * @param bubble The colliding bubble.
+     */
+    @Override
     public void bubbleToWallCollision(Bubble bubble) {
         synchronized (sequencer) {
+            int note = (int) (127 * (1 - bubble.getRadius() / Bubble.MAX_RADIUS));
             long length = (long) ((1 - bubble.getSpeed().norm() / Bubble.MAX_SPEED) * NOTE_LENGTH);
-            addNote(track1, calcNote(bubble), sequencer.getTickPosition(), length,
+            addNote(track1, note, sequencer.getTickPosition(), length,
                     (int) (bubble.getSpeed().norm() / Bubble.MAX_SPEED * VELOCITY));
             sequencer.setTickPosition(sequencer.getTickPosition() + length);
         }
     }
 
+    /**
+     * Adds a new note to the track and plays it.
+     *
+     * @param track The track to add the note to.
+     * @param note The note's value (from 0 to 127).
+     * @param startTick The position on the track (in ticks) for the note.
+     * @param tickLength The length of the note (in ticks).
+     * @param velocity The volume of the note.
+     */
     private void addNote(
             Track track, int note, long startTick, long tickLength, int velocity) {
         ShortMessage msgOn = new ShortMessage();
@@ -93,10 +130,6 @@ class SoundEngine implements PhysicsListener {
             System.err.println("ERROR: Failed to play sound.");
             e.printStackTrace();
         }
-    }
-
-    private int calcNote(Bubble bubble) {
-        return (int) (127 * (1.0 - bubble.getRadius() / Bubble.MAX_RADIUS));
     }
 
 }
