@@ -47,15 +47,19 @@ class PhysicsEngine {
      */
     public void addBubbles(int count) {
         synchronized (bubbles) {
+            double width = walls[2].getBoundsLine().x - walls[0].getBoundsLine().x;
+            double height = walls[1].getBoundsLine().y - walls[3].getBoundsLine().y;
             for (int i = 0; i < count; i++) {
-                double size = Bubble.MAX_RADIUS * (0.8 * Math.random() + 0.2);
+                double radius = Bubble.MAX_RADIUS * (0.8 * Math.random() + 0.2);
                 Vector2d position;
                 do {
-                    position = new Vector2d(Math.random() * 200 + 50, Math.random() * 200 + 50);
-                } while (!isEmptySpace(position, size));
+                    position = new Vector2d(
+                            radius + Math.random() * (width - 2 * radius),
+                            -(radius + Math.random() * (height - 2 * radius)));
+                } while (!isEmptySpace(position, radius));
                 Vector2d speed = new Vector2d(
                         Math.random(), Math.random()).product(Bubble.MAX_SPEED);
-                bubbles.add(new Bubble(size, position, speed));
+                bubbles.add(new Bubble(radius, position, speed));
             }
         }
     }
@@ -127,8 +131,21 @@ class PhysicsEngine {
             i = bubbles.listIterator();
             while (i.hasNext()) {
                 bubble = i.next();
-                Vector2d position = bubble.getPosition();
+
+                // Calculate the new speed, as affected by the wind.
                 Vector2d speed = bubble.getSpeed();
+                if (bubble.intersects(fan)) {
+                    Vector2d diff = bubble.getPosition().sub(fan.getPosition());
+                    Vector2d force = diff.getNormed(fan.getIntensity());
+                    Vector2d newSpeed = bubble.getSpeed().sum(new Vector2d(
+                            delta * force.x,
+                            delta * force.y
+                    ));
+                    bubble.setSpeed(newSpeed);
+                }
+
+                // Calculate the new position.
+                Vector2d position = bubble.getPosition();
                 bubble.setPosition(position.sum(speed.product(delta)));
             }
 

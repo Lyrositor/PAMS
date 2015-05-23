@@ -56,7 +56,10 @@ public class Vector2d {
     }
 
     public Vector2d getNormed(double newNorm) {
-        return product(Math.sqrt(newNorm / norm()));
+        double angle = angle();
+        return new Vector2d(
+                newNorm * Math.cos(angle),
+                newNorm * Math.sin(angle));
     }
 
     public Vector2d getAngled(double newAngle) {

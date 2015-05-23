@@ -1,3 +1,4 @@
+import math.Vector2d;
 import objects.Fan;
 
 import javax.swing.*;
@@ -8,7 +9,7 @@ import java.awt.event.*;
 
 class PAMS {
 
-    private static final int[] DIMENSIONS = {640, 480};
+    private static final int[] DIMENSIONS = {1000, 600};
     private static final String TITLE = "PAMS";
 
     private final JFrame main;
@@ -46,6 +47,7 @@ class PAMS {
         main.setResizable(false);
         main.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         main.setContentPane(frame.rootPanel);
+        frame.intensitySlider.setMaximum(Fan.MAX_INTENSITY);
         setupMenu();
         setupListeners();
         main.addComponentListener(new ComponentListener() {
@@ -100,7 +102,6 @@ class PAMS {
         BubblesNumberListener nbListener = new BubblesNumberListener();
         BubblesSpeedListener speedListener = new BubblesSpeedListener();
         MenuFichierListener fichierListener = new MenuFichierListener();
-        WindListener windListener = new WindListener();
 
         frame.addBubblesButton.addActionListener(nbListener);
         frame.removeBubblesButton.addActionListener(nbListener);
@@ -109,8 +110,9 @@ class PAMS {
         for (Component m : main.getJMenuBar().getMenu(0).getMenuComponents())
             ((JMenuItem) m).addActionListener(fichierListener);
 
-        frame.intensitySlider.addChangeListener(windListener);
-        frame.angleSlider.addChangeListener(windListener);
+        frame.intensitySlider.addChangeListener(new WindIntensityListener());
+
+        frame.canvas.addMouseMotionListener(new WindAngleListener());
     }
 
     /**
@@ -224,17 +226,27 @@ class PAMS {
         }
     }
 
-    private class WindListener implements ChangeListener {
+    private class WindIntensityListener implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {
-            Fan fan = physics.getFan();
             double newIntensity = frame.intensitySlider.getValue();
-            fan.setIntensity(newIntensity);
-            fan.setAngle(frame.angleSlider.getValue() * Math.PI / 180);
-            if (newIntensity == 0)
-                frame.angleSlider.setEnabled(false);
-            else
-                frame.angleSlider.setEnabled(true);
+            physics.getFan().setIntensity(newIntensity);
+        }
+    }
+
+    private class WindAngleListener implements MouseMotionListener {
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            Fan fan = physics.getFan();
+            if (fan.getIntensity() > 0) {
+                Vector2d p = fan.getPosition();
+                fan.setAngle(new Vector2d(e.getX() - p.x, e.getY() - p.y).angle());
+            }
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
         }
     }
 }

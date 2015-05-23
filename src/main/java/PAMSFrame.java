@@ -1,8 +1,6 @@
 import javax.swing.*;
 
 class PAMSFrame {
-    public JTabbedPane tabbedPane;
-    public JSlider angleSlider;
     public JSlider intensitySlider;
     public JButton addBubblesButton;
     public JButton removeBubblesButton;
@@ -10,6 +8,13 @@ class PAMSFrame {
     public JButton decreaseSpeedButton;
     public JPanel canvas;
     public JPanel rootPanel;
+    private JLabel intensityLabel;
+    private JLabel speedLabel;
+    private JLabel numberLabel;
+    private JPanel controlPanel;
+    private JPanel numberBubblesPanel;
+    private JPanel speedBubblesPanel;
+    private JPanel sidebar;
 
     public PAMSFrame(JPanel panel) {
         canvas = panel;
@@ -19,6 +24,5 @@ class PAMSFrame {
         // Small hack to force the dimensions of the window.
         canvas.setMinimumSize(canvas.getSize());
     }
-
 
 }

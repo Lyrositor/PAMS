@@ -97,6 +97,23 @@ public class Bubble extends PhysicsObject {
     }
 
     /**
+     * Checks if the bubble intersects with the fan's cone of wind.
+     * <p>
+     * To simplify calculations, we only check if the center of the circle is in
+     * the triangle, since this is where the force gets applied. We do not care
+     * about the cone's length either, since we are assuming it has infinite
+     * reach.
+     *
+     * @param fan The fan to check against.
+     * @return True if it intersects, false otherwise.
+     */
+    public boolean intersects(Fan fan) {
+        double angle = position.sub(fan.getPosition()).angle();
+        Vector2d[] coneVectors = fan.getConeVectors();
+        return angle > coneVectors[0].angle() && angle < coneVectors[1].angle();
+    }
+
+    /**
      * Checks if the bubble intersects with another bubble.
      *
      * @param otherBubble The other bubble to check for intersection.
@@ -106,19 +123,6 @@ public class Bubble extends PhysicsObject {
         Vector2d otherBubblePosition = otherBubble.getPosition();
         Vector2d diff = otherBubblePosition.sub(position);
         return diff.norm() <= radius + otherBubble.getRadius();
-    }
-
-    /**
-     * Applies a collision to this bubble and the colliding bubble.
-     *
-     * @param otherBubble The other bubble to apply the collision to.
-     */
-    public void collide(Bubble otherBubble) {
-        Vector2d diff = otherBubble.getPosition().sub(position);
-        Vector2d newPosition = position.sum(diff.getNormed(radius + otherBubble.getRadius()));
-        otherBubble.setPosition(newPosition);
-        setSpeed(calcCollisionSpeed(this, otherBubble));
-        otherBubble.setSpeed(calcCollisionSpeed(otherBubble, this));
     }
 
     /**
@@ -136,6 +140,19 @@ public class Bubble extends PhysicsObject {
             return true;
 
         return false;
+    }
+
+    /**
+     * Applies a collision to this bubble and the colliding bubble.
+     *
+     * @param otherBubble The other bubble to apply the collision to.
+     */
+    public void collide(Bubble otherBubble) {
+        Vector2d diff = otherBubble.getPosition().sub(position);
+        Vector2d newPosition = position.sum(diff.getNormed(radius + otherBubble.getRadius()));
+        otherBubble.setPosition(newPosition);
+        setSpeed(calcCollisionSpeed(this, otherBubble));
+        otherBubble.setSpeed(calcCollisionSpeed(otherBubble, this));
     }
 
     /**
