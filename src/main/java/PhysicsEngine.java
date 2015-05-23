@@ -58,7 +58,8 @@ class PhysicsEngine {
                             -(radius + Math.random() * (height - 2 * radius)));
                 } while (!isEmptySpace(position, radius));
                 Vector2d speed = new Vector2d(
-                        Math.random(), Math.random()).product(Bubble.MAX_SPEED);
+                        0.2 + 0.8 * Math.random(), 0.2 + 0.8 * Math.random()
+                ).product(Bubble.MAX_SPEED);
                 bubbles.add(new Bubble(radius, position, speed));
             }
         }
