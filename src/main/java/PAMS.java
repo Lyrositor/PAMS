@@ -17,6 +17,9 @@ class PAMS {
     private SoundEngine sound;
     private BubblesPanel canvas;
 
+    /**
+     * Initialize all program components and show the window.
+     */
     private PAMS() {
         // Initialiser les sous-systèmes.
         physics = new PhysicsEngine(DIMENSIONS);
@@ -28,7 +31,7 @@ class PAMS {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
-            System.out.println("ERROR: Failed to set system look and feel.");
+            System.err.println("ERROR: Failed to set system look and feel.");
         }
 
         // Créer la fenêtre.
@@ -62,6 +65,9 @@ class PAMS {
         app.run();
     }
 
+    /**
+     * Create the main menu toolbar.
+     */
     private void setupMenu() {
         JMenuBar mainMenuBar = new JMenuBar();
         JMenu fichierMenu = new JMenu("Fichier");
@@ -76,6 +82,9 @@ class PAMS {
         main.setJMenuBar(mainMenuBar);
     }
 
+    /**
+     * Attach all listeners to the desired components.
+     */
     private void setupListeners() {
         BubblesNumberListener nbListener = new BubblesNumberListener();
         BubblesSpeedListener speedListener = new BubblesSpeedListener();
@@ -93,6 +102,12 @@ class PAMS {
         frame.angleSlider.addChangeListener(windListener);
     }
 
+    /**
+     * Run the simulation forever.
+     * <p>
+     * This uses a fixed time step for simulating, and a variable time step for
+     * drawing.
+     */
     private void run() {
         final int dt = 10 * 1000;
 
@@ -161,7 +176,12 @@ class PAMS {
                     break;
                 case "Nouveau":
                     physics.removeBubbles(physics.getBubbleCount());
-                    sound.reset();
+                    try {
+                        sound.reset();
+                    } catch (Exception ex) {
+                        System.err.println("ERROR: Failed to reset sound.");
+                        ex.printStackTrace();
+                    }
                     break;
             }
         }
@@ -179,5 +199,4 @@ class PAMS {
                 frame.angleSlider.setEnabled(true);
         }
     }
-
 }

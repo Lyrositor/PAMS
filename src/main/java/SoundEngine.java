@@ -2,50 +2,49 @@ import objects.Bubble;
 
 import javax.sound.midi.*;
 import java.io.File;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 class SoundEngine implements PhysicsListener {
 
-    private ExecutorService soundThreadPool;
+    private static final int NOTE_LENGTH = 32;  // Half Note
+    private static final int TEMPO = 120;
+    private static final int VELOCITY = 64;  // Middle Volume
     private Sequencer sequencer;
     private Synthesizer synthesizer;
+    private Track track1;
 
     public SoundEngine() {
-        soundThreadPool = Executors.newCachedThreadPool();
-
         try {
             sequencer = MidiSystem.getSequencer();
-            Transmitter transmitter = sequencer.getTransmitter();
             synthesizer = MidiSystem.getSynthesizer();
-            Receiver receiver = sequencer.getReceiver();
-            transmitter.setReceiver(receiver);
-
-            Sequence sequence = new Sequence(Sequence.PPQ, 1);
-            sequence.createTrack();
-            sequencer.setSequence(sequence);
-            sequencer.setTempoInBPM(120);
-
-            sequencer.open();
-            sequencer.startRecording();
-            synthesizer.open();
+            reset();
         } catch (Exception e) {
-            System.out.println("ERROR: Failed to initialize MIDI interfaces.");
+            System.err.println("ERROR: Failed to initialize MIDI interfaces.");
             e.printStackTrace();
         }
     }
 
-    public void reset() {
-        try {
-            synthesizer.close();
-            sequencer.stopRecording();
-            sequencer.close();
-            synthesizer.open();
+    public void reset() throws MidiUnavailableException,
+            InvalidMidiDataException {
+        synchronized (sequencer) {
+            // Close the sequencer if it is currently running.
+            if (sequencer.isRecording()) {
+                sequencer.stopRecording();
+                sequencer.recordDisable(track1);
+            }
+            if (sequencer.isOpen())
+                sequencer.close();
+            if (synthesizer.isOpen())
+                synthesizer.close();
+
+            // Create a new sequence and start recording on it.
+            Sequence sequence = new Sequence(Sequence.PPQ, 16);
+            track1 = sequence.createTrack();
+            sequencer.setSequence(sequence);
+            sequencer.setTempoInBPM(TEMPO);
             sequencer.open();
+            sequencer.recordEnable(track1, -1);
             sequencer.startRecording();
-        } catch (Exception e) {
-            System.out.println("ERROR: Failed to re-initialize MIDI interfaces.");
-            e.printStackTrace();
+            synthesizer.open();
         }
     }
 
@@ -57,11 +56,11 @@ class SoundEngine implements PhysicsListener {
                 MidiSystem.write(sequence, fileTypes[0], file);
                 return true;
             } catch (Exception e) {
-                System.out.println("ERROR: Failed to write to file.");
+                System.err.println("ERROR: Failed to write to file.");
                 e.printStackTrace();
             }
         } else
-            System.out.println("ERROR: Failed to find valid MIDI file types.");
+            System.err.println("ERROR: Failed to find valid MIDI file types.");
         return false;
     }
 
@@ -69,38 +68,35 @@ class SoundEngine implements PhysicsListener {
     }
 
     public void bubbleToWallCollision(Bubble bubble) {
-        soundThreadPool.execute(new BubbleSound(bubble));
+        synchronized (sequencer) {
+            long length = (long) ((1 - bubble.getSpeed().norm() / Bubble.MAX_SPEED) * NOTE_LENGTH);
+            addNote(track1, calcNote(bubble), sequencer.getTickPosition(), length,
+                    (int) (bubble.getSpeed().norm() / Bubble.MAX_SPEED * VELOCITY));
+            sequencer.setTickPosition(sequencer.getTickPosition() + length);
+        }
     }
 
-    private class BubbleSound implements Runnable {
+    private void addNote(
+            Track track, int note, long startTick, long tickLength, int velocity) {
+        ShortMessage msgOn = new ShortMessage();
+        ShortMessage msgOff = new ShortMessage();
 
-        private Bubble bubble;
-
-        private int TICK = 16;
-
-        public BubbleSound(Bubble bubble) {
-            this.bubble = bubble;
+        try {
+            msgOn.setMessage(ShortMessage.NOTE_ON, 0, note, velocity);
+            msgOff.setMessage(ShortMessage.NOTE_OFF, 0, note, velocity);
+            Receiver synthesizerReceiver = synthesizer.getReceiver();
+            track.add(new MidiEvent(msgOn, startTick));
+            track.add(new MidiEvent(msgOff, startTick + tickLength));
+            synthesizerReceiver.send(msgOn, -1);
+            synthesizerReceiver.send(msgOff, -1);
+        } catch (Exception e) {
+            System.err.println("ERROR: Failed to play sound.");
+            e.printStackTrace();
         }
-
-        private int calcNote() {
-            return (int) (127 * (1.0 - bubble.getRadius() / Bubble.MAX_RADIUS));
-        }
-
-        public void run() {
-            ShortMessage msgOn = new ShortMessage();
-            ShortMessage msgOff = new ShortMessage();
-            Track track = sequencer.getSequence().getTracks()[0];
-            try {
-                msgOn.setMessage(ShortMessage.NOTE_ON, 0, calcNote(), 100);
-                msgOff.setMessage(ShortMessage.NOTE_OFF, 0, calcNote(), 100);
-
-                track.add(new MidiEvent(msgOn, 0));
-                track.add(new MidiEvent(msgOff, 4));
-            } catch (Exception e) {
-                System.out.println("ERROR: Failed to play sound.");
-                e.printStackTrace();
-            }
-        }
-
     }
+
+    private int calcNote(Bubble bubble) {
+        return (int) (127 * (1.0 - bubble.getRadius() / Bubble.MAX_RADIUS));
+    }
+
 }

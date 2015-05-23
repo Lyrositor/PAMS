@@ -64,7 +64,7 @@ public class Bubble extends PhysicsObject {
         Vector2d diff = otherBubble.getPosition().sub(position);
         Vector2d newPosition = position.sum(diff.getNormed(radius + otherBubble.getRadius()));
         otherBubble.setPosition(newPosition);
-        speed = calcCollisionSpeed(this, otherBubble);
+        setSpeed(calcCollisionSpeed(this, otherBubble));
         otherBubble.setSpeed(calcCollisionSpeed(otherBubble, this));
     }
 
@@ -84,12 +84,17 @@ public class Bubble extends PhysicsObject {
         if (wall.isHorizontal()) {
             double sign = -Math.signum(linePos.y - position.y);
             position.y = linePos.y + sign * radius;
-
             speed.y = sign * Math.abs(speed.y);
         } else {
             double sign = -Math.signum(linePos.x - position.x);
             position.x = linePos.x + sign * radius;
             speed.x = sign * Math.abs(speed.x);
         }
+    }
+
+    public String toString() {
+        return String.format(
+                "Bubble(position=%s, speed=%s, radius=)",
+                position, speed, radius);
     }
 }
