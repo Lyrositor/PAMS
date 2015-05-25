@@ -56,7 +56,7 @@ class SoundEngine implements PhysicsListener {
     }
 
     /**
-     * création d'un tableau ne contenant que les notes do-mi-sol...
+     * création d'un tableau ne contenant que les notes do-mi-sol... Pour l'instant ça ne fonctionne pas ...
      *
      */
 
