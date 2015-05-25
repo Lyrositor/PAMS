@@ -10,8 +10,9 @@ class SoundEngine implements PhysicsListener {
     private static final int VELOCITY = 64;  // Middle Volume
     private final Sequencer sequencer;
     private final Synthesizer synthesizer;
+    public boolean coche = true;
     private Track track1;
-
+    private int[] tableauHarmonieux = triNotes();
     /**
      * Prepares the sound engine for first-time use.
      *
@@ -55,6 +56,39 @@ class SoundEngine implements PhysicsListener {
     }
 
     /**
+     * création d'un tableau ne contenant que les notes do-mi-sol...
+     *
+     */
+
+    public int[] triNotes() {
+        int[] tableau = new int[30];
+        tableau[0] = 21;
+        /** TEST
+         tableau[0]=1;
+         tableau[1]=3;
+         tableau[2]=5;
+         tableau[3]=8;
+         tableau[4]=10;
+         tableau[5]=12;
+         tableau[7]=15;
+         tableau[8]=17;
+         tableau[9]=21;
+         //if i est un multiple de 3, alors tableau[i]=tab[i-1]+3
+         //else tableau[i]=tableau[1-1]+2
+         */
+
+        for (int i = 1; i < tableau.length; i++) {
+            if (i % 3 == 0) {
+                tableau[i] = tableau[i - 1] + 3;
+            } else {
+                tableau[i] = tableau[i - 1] + 2;
+            }
+        }
+
+        return tableau;
+    }
+
+    /**
      * Saves record data to the specified file.
      *
      * @param file The file to save the data to.
@@ -84,7 +118,20 @@ class SoundEngine implements PhysicsListener {
      */
     @Override
     public void bubbleToBubbleCollision(Bubble bubble, Bubble otherBubble) {
+        synchronized (sequencer) {
+            int note;
+            if (coche = true) {
+                note = tableauHarmonieux[(int) ((1 - bubble.getRadius() / Bubble.MAX_RADIUS) * 30)]; //tableauHarmonieux n'est composé que des notes do-mi-sol, soit 54 en tout.
+            } else {
+                note = (int) (127 * (1 - bubble.getRadius() / Bubble.MAX_RADIUS));
+                long length = (long) ((1 - bubble.getSpeed().norm() / Bubble.MAX_SPEED) * NOTE_LENGTH);
+                int velocity = (int) (bubble.getSpeed().norm() / Bubble.MAX_SPEED * VELOCITY);
+                addNote(track1, note, sequencer.getTickPosition(), length, velocity);
+                sequencer.setTickPosition(sequencer.getTickPosition() + length);
+            }
+        }
     }
+
 
     /**
      * Called when a bubble collides into a wall.
@@ -94,7 +141,13 @@ class SoundEngine implements PhysicsListener {
     @Override
     public void bubbleToWallCollision(Bubble bubble) {
         synchronized (sequencer) {
-            int note = (int) (127 * (1 - bubble.getRadius() / Bubble.MAX_RADIUS));
+            int note;
+            if (coche = true) {
+
+                note = tableauHarmonieux[(int) ((1 - bubble.getRadius() / Bubble.MAX_RADIUS) * 30)]; //tableauHarmonieux n'est composé que des notes do-mi-sol, soit 54 en tout.
+            } else {
+                note = (int) (127 * (1 - bubble.getRadius() / Bubble.MAX_RADIUS));
+            }
             long length = (long) ((1 - bubble.getSpeed().norm() / Bubble.MAX_SPEED) * NOTE_LENGTH);
             int velocity = (int) (bubble.getSpeed().norm() / Bubble.MAX_SPEED * VELOCITY);
             addNote(track1, note, sequencer.getTickPosition(), length, velocity);
