@@ -96,8 +96,8 @@ class SoundEngine implements PhysicsListener {
         synchronized (sequencer) {
             int note = (int) (127 * (1 - bubble.getRadius() / Bubble.MAX_RADIUS));
             long length = (long) ((1 - bubble.getSpeed().norm() / Bubble.MAX_SPEED) * NOTE_LENGTH);
-            addNote(track1, note, sequencer.getTickPosition(), length,
-                    (int) (bubble.getSpeed().norm() / Bubble.MAX_SPEED * VELOCITY));
+            int velocity = (int) (bubble.getSpeed().norm() / Bubble.MAX_SPEED * VELOCITY);
+            addNote(track1, note, sequencer.getTickPosition(), length, velocity);
             sequencer.setTickPosition(sequencer.getTickPosition() + length);
         }
     }
