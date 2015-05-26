@@ -10,9 +10,16 @@ class SoundEngine implements PhysicsListener {
     private static final int VELOCITY = 64;  // Middle Volume
     private final Sequencer sequencer;
     private final Synthesizer synthesizer;
-    public boolean coche = true;
+    public boolean coche = true; //en mode "hamonieux", on coche une case qui fait que les sons des nouvelles bulles appartiennent à un accord parfait majeur.
+    public int fondamentale = 4;// on peut choisir quel est le fondamental de l'accord (la note la plus basse)
     private Track track1;
     private int[] tableauHarmonieux = triNotes();
+    //par exemple si la note fondamentale est do, l'accord sera do-mi-sol, si c'est la, ce sera la-do-mi, etc...
+    // il faudrait donc un curseur pour choisir notre fondamentale :-)
+    // ({Do =0; Re = 2; Mi=4; Fa=5; Sol = 7; La = 9; Si=11} [12])
+    //0<=fondamentale<12
+
+
     /**
      * Prepares the sound engine for first-time use.
      *
@@ -56,32 +63,21 @@ class SoundEngine implements PhysicsListener {
     }
 
     /**
-     * création d'un tableau ne contenant que les notes do-mi-sol... Pour l'instant ça ne fonctionne pas ...
-     *
-     */
-
+     * création d'un tableau ne contenant que les notes d'un accord parfait majeur... ça fonctionne !!
+     * */
     public int[] triNotes() {
-        int[] tableau = new int[30];
-        tableau[0] = 21;
-        /** TEST
-         tableau[0]=1;
-         tableau[1]=3;
-         tableau[2]=5;
-         tableau[3]=8;
-         tableau[4]=10;
-         tableau[5]=12;
-         tableau[7]=15;
-         tableau[8]=17;
-         tableau[9]=21;
-         //if i est un multiple de 3, alors tableau[i]=tab[i-1]+3
-         //else tableau[i]=tableau[1-1]+2
-         */
-
-        for (int i = 1; i < tableau.length; i++) {
-            if (i % 3 == 0) {
+        int[] tableau = new int[32];
+        tableau[0] = fondamentale + 12;
+        tableau[1] = tableau[0] + 4;
+        tableau[2] = tableau[1] + 3;
+        tableau[3] = tableau[2] + 5;
+        for (int i = 4; i < tableau.length; i++) {
+            if (tableau[i - 1] - tableau[i - 2] == 5) {
+                tableau[i] = tableau[i - 1] + 4;
+            } else if (tableau[i - 1] - tableau[i - 2] == 4) {
                 tableau[i] = tableau[i - 1] + 3;
             } else {
-                tableau[i] = tableau[i - 1] + 2;
+                tableau[i] = tableau[i - 1] + 5;
             }
         }
 
@@ -121,9 +117,9 @@ class SoundEngine implements PhysicsListener {
         synchronized (sequencer) {
             int note;
             if (coche = true) {
-                note = tableauHarmonieux[(int) ((1 - bubble.getRadius() / Bubble.MAX_RADIUS) * 30)]; //tableauHarmonieux n'est composé que des notes do-mi-sol, soit 54 en tout.
+                note = tableauHarmonieux[(int) ((1 - bubble.getRadius() / Bubble.MAX_RADIUS) * 32)]; //tableauHarmonieux n'est composé que des notes d'un accord parfait majeur, soit une 132/12 + 12 = 32 (+12 pour ne pas avoir des sons trop graves) en tout.
             } else {
-                note = (int) (127 * (1 - bubble.getRadius() / Bubble.MAX_RADIUS));
+                note = (int) (132 * (1 - bubble.getRadius() / Bubble.MAX_RADIUS));
                 long length = (long) ((1 - bubble.getSpeed().norm() / Bubble.MAX_SPEED) * NOTE_LENGTH);
                 int velocity = (int) (bubble.getSpeed().norm() / Bubble.MAX_SPEED * VELOCITY);
                 addNote(track1, note, sequencer.getTickPosition(), length, velocity);
@@ -144,9 +140,9 @@ class SoundEngine implements PhysicsListener {
             int note;
             if (coche = true) {
 
-                note = tableauHarmonieux[(int) ((1 - bubble.getRadius() / Bubble.MAX_RADIUS) * 30)]; //tableauHarmonieux n'est composé que des notes do-mi-sol, soit 54 en tout.
+                note = tableauHarmonieux[(int) ((1 - bubble.getRadius() / Bubble.MAX_RADIUS) * 32)];
             } else {
-                note = (int) (127 * (1 - bubble.getRadius() / Bubble.MAX_RADIUS));
+                note = (int) (132 * (1 - bubble.getRadius() / Bubble.MAX_RADIUS));
             }
             long length = (long) ((1 - bubble.getSpeed().norm() / Bubble.MAX_SPEED) * NOTE_LENGTH);
             int velocity = (int) (bubble.getSpeed().norm() / Bubble.MAX_SPEED * VELOCITY);
