@@ -8,6 +8,7 @@ class PAMSFrame {
     public JButton decreaseSpeedButton;
     public JPanel canvas;
     public JPanel rootPanel;
+    public JCheckBox harmonicCheckbox;
     private JLabel intensityLabel;
     private JLabel speedLabel;
     private JLabel numberLabel;
@@ -15,6 +16,7 @@ class PAMSFrame {
     private JPanel numberBubblesPanel;
     private JPanel speedBubblesPanel;
     private JPanel sidebar;
+    private JLabel harmonicLabel;
 
     public PAMSFrame(JPanel panel) {
         canvas = panel;

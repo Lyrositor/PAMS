@@ -112,8 +112,9 @@ class PAMS {
             ((JMenuItem) m).addActionListener(fichierListener);
 
         frame.intensitySlider.addChangeListener(new WindIntensityListener());
-
         frame.canvas.addMouseMotionListener(new WindAngleListener());
+
+        frame.harmonicCheckbox.addChangeListener(new HarmonicListener());
     }
 
     /**
@@ -246,6 +247,14 @@ class PAMS {
 
         @Override
         public void mouseMoved(MouseEvent e) {
+        }
+    }
+
+    private class HarmonicListener implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            sound.setHarmonic(((JCheckBox) e.getSource()).isSelected());
         }
     }
 }
