@@ -11,8 +11,7 @@ public class Bubble extends PhysicsObject {
 
     public static final double MAX_RADIUS = 25.0;
     public static final double MAX_SPEED = 500;
-    public static final double DENSITY = 7.0;
-
+    private static final double DENSITY = 7.0;
     private final double radius;
 
     /**

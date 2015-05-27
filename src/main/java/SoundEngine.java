@@ -71,8 +71,7 @@ class SoundEngine implements PhysicsListener {
      * @throws MidiUnavailableException
      * @throws InvalidMidiDataException
      */
-    public void reset() throws MidiUnavailableException,
-            InvalidMidiDataException {
+    public void reset() throws InvalidMidiDataException {
         synchronized (sequencer) {
             // Disable ongoing recordings.
             if (sequencer.isRecording()) {

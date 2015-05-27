@@ -193,10 +193,25 @@ class PhysicsEngine {
      * @return True if the space is empty, false otherwise.
      */
     private boolean isEmptySpace(Vector2d center, double radius) {
-        for (Bubble b : bubbles)
-            if (b.intersects(center, radius))
-                return false;
+        synchronized (bubbles) {
+            for (Bubble b : bubbles)
+                if (b.intersects(center, radius))
+                    return false;
+        }
         return true;
     }
 
+    /**
+     * Calculates and returns the total amount of the bubbles' kinetic energy.
+     *
+     * @return The total of kinetic energy.
+     */
+    public double getTotalKineticEnergy() {
+        double energy = 0;
+        synchronized (bubbles) {
+            for (Bubble bubble : bubbles)
+                energy += 0.5 * bubble.getMass() * bubble.getSpeed().norm2();
+        }
+        return energy;
+    }
 }

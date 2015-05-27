@@ -86,8 +86,12 @@ class PAMS {
         JMenuBar mainMenuBar = new JMenuBar();
         JMenu fichierMenu = new JMenu("Fichier");
         JMenuItem nouveau = new JMenuItem("Nouveau");
-        JMenuItem quitter = new JMenuItem("Quitter");
         JMenuItem sauvegarder = new JMenuItem("Sauvegarder");
+        JMenuItem quitter = new JMenuItem("Quitter");
+
+        nouveau.setAccelerator(KeyStroke.getKeyStroke("N"));
+        sauvegarder.setAccelerator(KeyStroke.getKeyStroke("S"));
+        quitter.setAccelerator(KeyStroke.getKeyStroke("Q"));
 
         fichierMenu.add(nouveau);
         fichierMenu.add(sauvegarder);
@@ -102,14 +106,14 @@ class PAMS {
     private void setupListeners() {
         BubblesNumberListener nbListener = new BubblesNumberListener();
         BubblesSpeedListener speedListener = new BubblesSpeedListener();
-        MenuFichierListener fichierListener = new MenuFichierListener();
+        MenuFileListener fileListener = new MenuFileListener();
 
         frame.addBubblesButton.addActionListener(nbListener);
         frame.removeBubblesButton.addActionListener(nbListener);
         frame.increaseSpeedButton.addActionListener(speedListener);
         frame.decreaseSpeedButton.addActionListener(speedListener);
         for (Component m : main.getJMenuBar().getMenu(0).getMenuComponents())
-            ((JMenuItem) m).addActionListener(fichierListener);
+            ((JMenuItem) m).addActionListener(fileListener);
 
         frame.intensitySlider.addChangeListener(new WindIntensityListener());
         frame.canvas.addMouseMotionListener(new WindAngleListener());
@@ -141,6 +145,10 @@ class PAMS {
                 physics.update(DT);
                 accumulator -= DT;
             }
+
+            // Update the amount of kinetic energy.
+            frame.kineticEnergyLabel.setText(
+                    String.format("%.2f", physics.getTotalKineticEnergy() / 1E9));
 
             // Re-draw the bubbles.
             canvas.repaint();
@@ -196,7 +204,7 @@ class PAMS {
         }
     }
 
-    private class MenuFichierListener implements ActionListener {
+    private class MenuFileListener implements ActionListener {
 
         /**
          * Processes an menu click event.

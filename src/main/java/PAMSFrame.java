@@ -9,6 +9,8 @@ class PAMSFrame {
     public JPanel canvas;
     public JPanel rootPanel;
     public JCheckBox harmonicCheckbox;
+    public JLabel kineticEnergyLabel;
+    public JLabel kineticEnergyInfoLabel;
     private JLabel intensityLabel;
     private JLabel speedLabel;
     private JLabel numberLabel;
