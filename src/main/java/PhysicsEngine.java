@@ -7,6 +7,13 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Performs all physics simulations on the bubbles.
+ * <p>
+ * Note: the <code>bubbles</code> list must remain synchronized across various
+ * threads, and should always be surrounded in a synchronized block when this
+ * class is modified.
+ */
 class PhysicsEngine {
 
     public static final int NUM_INITIAL_BUBBLES = 3;
@@ -28,11 +35,12 @@ class PhysicsEngine {
         // Create the walls.
         Vector2d v = new Vector2d(10, dim[1]);
         Vector2d h = new Vector2d(dim[0], 10);
+        Color c = Color.blue;
         walls = new Wall[]{
-                new Wall(v, new Vector2d(0, 0), false, 10, Color.blue),  // Left
-                new Wall(h, new Vector2d(0, 0), true, 10, Color.blue),  // Top
-                new Wall(v, new Vector2d(dim[0] - 10, 0), false, 0, Color.blue),  // Right
-                new Wall(h, new Vector2d(0, dim[1] - 10), true, 0, Color.blue) // Bottom
+                new Wall(v, new Vector2d(0, 0), false, 10, c),  // Left
+                new Wall(h, new Vector2d(0, 0), true, 10, c),  // Top
+                new Wall(v, new Vector2d(dim[0] - 10, 0), false, 0, c), // Right
+                new Wall(h, new Vector2d(0, dim[1] - 10), true, 0, c)  // Bottom
         };
 
         // Create the initial bubbles.
@@ -47,15 +55,15 @@ class PhysicsEngine {
      */
     public void addBubbles(int count) {
         synchronized (bubbles) {
-            double width = walls[2].getBoundsLine().x - walls[0].getBoundsLine().x;
-            double height = walls[1].getBoundsLine().y - walls[3].getBoundsLine().y;
+            double x = walls[2].getBoundsLine().x - walls[0].getBoundsLine().x;
+            double y = walls[1].getBoundsLine().y - walls[3].getBoundsLine().y;
             for (int i = 0; i < count; i++) {
                 double radius = Bubble.MAX_RADIUS * (0.8 * Math.random() + 0.2);
                 Vector2d position;
                 do {
                     position = new Vector2d(
-                            radius + Math.random() * (width - 2 * radius),
-                            -(radius + Math.random() * (height - 2 * radius)));
+                            radius + Math.random() * (x - 2 * radius),
+                            -(radius + Math.random() * (y - 2 * radius)));
                 } while (!isEmptySpace(position, radius));
                 Vector2d speed = new Vector2d(
                         0.2 + 0.8 * Math.random(), 0.2 + 0.8 * Math.random()
@@ -92,7 +100,8 @@ class PhysicsEngine {
         synchronized (bubbles) {
             for (Bubble bubble : bubbles) {
                 Vector2d speed = bubble.getSpeed();
-                bubble.setSpeed(speed.getNormed(Math.max(1, speed.norm() + delta)));
+                bubble.setSpeed(
+                        speed.getNormed(Math.max(1, speed.norm() + delta)));
             }
         }
     }
@@ -106,22 +115,51 @@ class PhysicsEngine {
         listeners.add(newListener);
     }
 
+    /**
+     * Returns the fan being used.
+     *
+     * @return The fan in use.
+     */
     public Fan getFan() {
         return fan;
     }
 
+    /**
+     * Returns a synchronized list of current bubbles.
+     *
+     * @return A dynamic list of bubbles in the simulation.
+     */
     public List<Bubble> getBubbles() {
-        return bubbles;
+        synchronized (bubbles) {
+            return bubbles;
+        }
     }
 
+    /**
+     * Counts the number of bubbles and returns the result.
+     *
+     * @return The number of bubbles in the simulation.
+     */
     public int getBubbleCount() {
-        return bubbles.size();
+        synchronized (bubbles) {
+            return bubbles.size();
+        }
     }
 
+    /**
+     * Returns the four walls representing the boundaries of the simulation.
+     *
+     * @return An array of four walls.
+     */
     public Wall[] getWalls() {
         return walls;
     }
 
+    /**
+     * Updates the simulation by the specified amount of time.
+     *
+     * @param delta The time step to use for updating.
+     */
     public void update(double delta) {
         Bubble bubble;
         Bubble otherBubble;
@@ -204,7 +242,7 @@ class PhysicsEngine {
     /**
      * Calculates and returns the total amount of the bubbles' kinetic energy.
      *
-     * @return The total of kinetic energy.
+     * @return The total amount of kinetic energy (unit-less).
      */
     public double getTotalKineticEnergy() {
         double energy = 0;

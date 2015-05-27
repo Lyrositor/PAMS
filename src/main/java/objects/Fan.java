@@ -52,6 +52,7 @@ public class Fan extends PhysicsObject {
      * Returns the coordinates of the wind cone's points.
      *
      * The wind cone is represented as a triangle, so three points are returned.
+     * @param length The length to impose on the cone's sides' vectors.
      * @return The x and y coordinates of the wind cone's points.
      */
     public int[][] getConeCoordinates(double length) {
@@ -66,6 +67,11 @@ public class Fan extends PhysicsObject {
         };
     }
 
+    /**
+     * Returns the vectors for the wind cone's two sides.
+     *
+     * @return An array of two vectors representing the directions of the cone.
+     */
     public Vector2d[] getConeVectors() {
         return new Vector2d[]{
                 force.getAngled(force.angle() - Math.PI / 8),

@@ -25,7 +25,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="11af" binding="controlPanel" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="11af" binding="controlPanel" layout-manager="GridLayoutManager" row-count="5" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
@@ -133,7 +133,7 @@
               </component>
               <component id="fbc22" class="javax.swing.JLabel" binding="harmonicLabel">
                 <constraints>
-                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Harmonique ?"/>
@@ -141,10 +141,34 @@
               </component>
               <component id="4358b" class="javax.swing.JCheckBox" binding="harmonicCheckbox">
                 <constraints>
-                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value=""/>
+                </properties>
+              </component>
+              <component id="4c057" class="javax.swing.JLabel" binding="fundamentalLabel">
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Fondamental"/>
+                </properties>
+              </component>
+              <component id="f9d8c" class="javax.swing.JComboBox" binding="fundamentalComboBox">
+                <constraints>
+                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <model>
+                    <item value="Do"/>
+                    <item value="Ré"/>
+                    <item value="Mi"/>
+                    <item value="Fa"/>
+                    <item value="Sol"/>
+                    <item value="La"/>
+                    <item value="Si"/>
+                  </model>
                 </properties>
               </component>
             </children>

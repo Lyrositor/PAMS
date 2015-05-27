@@ -8,6 +8,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+/**
+ * The surface on which the simulation is drawn.
+ */
 class BubblesPanel extends JPanel {
 
     private final BufferedImage image;
@@ -29,7 +32,8 @@ class BubblesPanel extends JPanel {
         image = new BufferedImage(dim[0], dim[1], BufferedImage.TYPE_INT_RGB);
         buffer = image.createGraphics();
         RenderingHints hints = new RenderingHints(
-                RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
         buffer.setRenderingHints(hints);
     }
 
@@ -66,8 +70,10 @@ class BubblesPanel extends JPanel {
             buffer.setColor(fan.getConeColor());
             int[][] conePoints = fan.getConeCoordinates(
                     Math.pow(getWidth(), 2) + Math.pow(getHeight(), 2));
-            buffer.drawPolygon(conePoints[0], conePoints[1], conePoints[0].length);
-            buffer.fillPolygon(conePoints[0], conePoints[1], conePoints[0].length);
+            buffer.drawPolygon(
+                    conePoints[0], conePoints[1], conePoints[0].length);
+            buffer.fillPolygon(
+                    conePoints[0], conePoints[1], conePoints[0].length);
 
             // Draw the fan's symbol.
             buffer.setColor(fan.getFanColor());
@@ -87,7 +93,8 @@ class BubblesPanel extends JPanel {
             double rayon = b.getRadius();
             buffer.setColor(b.getColor());
             buffer.fillOval(
-                    (int) Math.round(pos.x - rayon), (int) Math.round(pos.y - rayon),
+                    (int) Math.round(pos.x - rayon),
+                    (int) Math.round(pos.y - rayon),
                     (int) b.getRadius() * 2, (int) b.getRadius() * 2);
         }
     }

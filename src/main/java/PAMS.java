@@ -4,8 +4,10 @@ import objects.Fan;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 
 class PAMS {
 
@@ -49,19 +51,24 @@ class PAMS {
         main.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         main.setContentPane(frame.rootPanel);
         frame.intensitySlider.setMaximum(Fan.MAX_INTENSITY);
+        frame.fundamentalComboBox.setSelectedItem("Mi");
         setupMenu();
         setupListeners();
         main.addComponentListener(new ComponentListener() {
+            @Override
             public void componentResized(ComponentEvent e) {
             }
 
+            @Override
             public void componentMoved(ComponentEvent e) {
                 main.repaint();
             }
 
+            @Override
             public void componentShown(ComponentEvent e) {
             }
 
+            @Override
             public void componentHidden(ComponentEvent e) {
             }
         });
@@ -84,19 +91,22 @@ class PAMS {
      */
     private void setupMenu() {
         JMenuBar mainMenuBar = new JMenuBar();
-        JMenu fichierMenu = new JMenu("Fichier");
-        JMenuItem nouveau = new JMenuItem("Nouveau");
-        JMenuItem sauvegarder = new JMenuItem("Sauvegarder");
-        JMenuItem quitter = new JMenuItem("Quitter");
+        JMenu fileMenu = new JMenu("Fichier");
+        JMenuItem newItem = new JMenuItem("Nouveau");
+        JMenuItem saveItem = new JMenuItem("Sauvegarder");
+        JMenuItem quitItem = new JMenuItem("Quitter");
 
-        nouveau.setAccelerator(KeyStroke.getKeyStroke("N"));
-        sauvegarder.setAccelerator(KeyStroke.getKeyStroke("S"));
-        quitter.setAccelerator(KeyStroke.getKeyStroke("Q"));
+        newItem.setAccelerator(
+                KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
+        saveItem.setAccelerator(
+                KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+        quitItem.setAccelerator(
+                KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
 
-        fichierMenu.add(nouveau);
-        fichierMenu.add(sauvegarder);
-        fichierMenu.add(quitter);
-        mainMenuBar.add(fichierMenu);
+        fileMenu.add(newItem);
+        fileMenu.add(saveItem);
+        fileMenu.add(quitItem);
+        mainMenuBar.add(fileMenu);
         main.setJMenuBar(mainMenuBar);
     }
 
@@ -119,6 +129,7 @@ class PAMS {
         frame.canvas.addMouseMotionListener(new WindAngleListener());
 
         frame.harmonicCheckbox.addChangeListener(new HarmonicListener());
+        frame.fundamentalComboBox.addItemListener(new FundamentalListener());
     }
 
     /**
@@ -141,17 +152,31 @@ class PAMS {
             accumulator += frameTime;
 
             // Update the physics simulation.
-            while (accumulator >= DT) {
-                physics.update(DT);
-                accumulator -= DT;
+            try {
+                while (accumulator >= DT) {
+                    physics.update(DT);
+                    accumulator -= DT;
+                }
+            } catch (Exception e) {
+                System.out.println(
+                        "ERROR: An error occurred in the physics simulation.");
+                e.printStackTrace();
+                System.exit(0);
+            }
+
+            // Re-draw the bubbles.
+            try {
+                canvas.repaint();
+            } catch (Exception e) {
+                System.out.println(
+                        "ERROR: An error occurred while drawing.");
+                e.printStackTrace();
+                System.exit(0);
             }
 
             // Update the amount of kinetic energy.
             frame.kineticEnergyLabel.setText(
                     String.format("%.2f", physics.getTotalKineticEnergy() / 1E9));
-
-            // Re-draw the bubbles.
-            canvas.repaint();
         }
     }
 
@@ -160,12 +185,16 @@ class PAMS {
      */
     private void saveAudioToFile() {
         JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "MIDI Files", "midi");
+        fileChooser.setFileFilter(filter);
         fileChooser.setDialogTitle("Enregistrer sous...");
         int userSelection = fileChooser.showSaveDialog(main);
         if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
             if (sound.save(fileChooser.getSelectedFile()))
                 JOptionPane.showMessageDialog(main,
-                        "Fichier enregistré : " + fileChooser.getSelectedFile().getName(),
+                        "Fichier enregistré : " + selectedFile.getName(),
                         "Succès",
                         JOptionPane.INFORMATION_MESSAGE);
             else
@@ -176,7 +205,15 @@ class PAMS {
         }
     }
 
+    /**
+     * Listens for events relating to the number of bubbles.
+     */
     private class BubblesNumberListener implements ActionListener {
+        /**
+         * Called when one of the add or remove buttons is clicked.
+         *
+         * @param e The click event.
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
@@ -190,7 +227,15 @@ class PAMS {
         }
     }
 
+    /**
+     * Listens for events relating to the speed of bubbles.
+     */
     private class BubblesSpeedListener implements ActionListener {
+        /**
+         * Called when one of the add or remove buttons is clicked.
+         *
+         * @param e The click event.
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
@@ -204,6 +249,9 @@ class PAMS {
         }
     }
 
+    /**
+     * Listens for events relating to the file menu.
+     */
     private class MenuFileListener implements ActionListener {
 
         /**
@@ -234,16 +282,33 @@ class PAMS {
         }
     }
 
+    /**
+     * Listens for events relating to the wind intensity slider.
+     */
     private class WindIntensityListener implements ChangeListener {
+
+        /**
+         * Called when the slider's value changes.
+         *
+         * @param e The event to process.
+         */
         @Override
         public void stateChanged(ChangeEvent e) {
-            double newIntensity = frame.intensitySlider.getValue();
+            double newIntensity = ((JSlider) e.getSource()).getValue();
             physics.getFan().setIntensity(newIntensity);
         }
     }
 
+    /**
+     * Listens for events relating to the wind angle, as modified by the mouse.
+     */
     private class WindAngleListener implements MouseMotionListener {
 
+        /**
+         * Called when the user drags his mouse over the panel.
+         *
+         * @param e The mouse event to process.
+         */
         @Override
         public void mouseDragged(MouseEvent e) {
             Fan fan = physics.getFan();
@@ -253,16 +318,69 @@ class PAMS {
             }
         }
 
+        /**
+         * Called when the user moves his mouse over the panel (ignored).
+         *
+         * @param e The mouse event to process.
+         */
         @Override
         public void mouseMoved(MouseEvent e) {
         }
     }
 
+    /**
+     * Listens for change in the value of the harmonic checkbox.
+     */
     private class HarmonicListener implements ChangeListener {
 
+        /**
+         * Called when the checkbox's state is toggled.
+         *
+         * @param e The event to process.
+         */
         @Override
         public void stateChanged(ChangeEvent e) {
             sound.setHarmonic(((JCheckBox) e.getSource()).isSelected());
+        }
+    }
+
+    /**
+     * Listens for change in the value of the fundamental.
+     */
+    private class FundamentalListener implements ItemListener {
+        /**
+         * Called when the combo box's value changes.
+         *
+         * @param e The event to process.
+         */
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                String note = (String) e.getItem();
+                switch (note) {
+                    case "Do":
+                        sound.setFundamental(0);
+                        break;
+                    case "Ré":
+                        sound.setFundamental(2);
+                        break;
+                    case "Mi":
+                        sound.setFundamental(4);
+                        break;
+                    case "Fa":
+                        sound.setFundamental(5);
+                        break;
+                    case "Sol":
+                        sound.setFundamental(7);
+                        break;
+                    case "La":
+                        sound.setFundamental(9);
+                        break;
+                    case "Si":
+                        sound.setFundamental(11);
+                        break;
+                }
+            }
         }
     }
 }

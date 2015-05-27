@@ -2,6 +2,9 @@ package objects;
 
 import math.Vector2d;
 
+/**
+ * Represents a 2D object that has a position and a speed.
+ */
 class PhysicsObject {
 
     Vector2d position;
@@ -54,4 +57,3 @@ class PhysicsObject {
         speed = new Vector2d(newSpeed.x, newSpeed.y);
     }
 }
-

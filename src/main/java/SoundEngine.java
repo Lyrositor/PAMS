@@ -3,28 +3,21 @@ import objects.Bubble;
 import javax.sound.midi.*;
 import java.io.File;
 
-
+/**
+ * Generates all the sounds for the simulation.
+ */
 class SoundEngine implements PhysicsListener {
 
-    private static final int NOTE_LENGTH = 32;  // Half Note
-    private static final int TEMPO = 120;
-    private static final int VELOCITY = 64;  // Middle Volume
-    private static final int FONDAMENTAL = 4;  // On peut choisir quel est le
-    // case qui fait que les sons des
-    // nouvelle sbulles appartiennent à un
-    // accord parfait majeur.
-    // fondamental de l'accord (la
-    // note la plus basse).
-    private static final int[] harmonicChord = createMajorChord();
+    private static final int DEFAULT_FUNDAMENTAL = 4;  // Mi/C
+    private static final int NOTE_LENGTH = 32;  // Half-note
+    private static final int TEMPO = 120;  // The resultant melody's tempo
+    private static final int VELOCITY = 64;  // Middle volume
     private final Sequencer sequencer;
     private final Synthesizer synthesizer;
     private Track track1;
-    private boolean harmonic = false;  // En mode "harmonieux", on coche une
-    // Par exemple si la note fondamentale est do, l'accord sera do-mi-sol, si c'est la, ce sera la-do-mi, etc...
-    // Il faudrait donc un curseur pour choisir notre fondamentale :-)
-    // ({Do =0; Re = 2; Mi=4; Fa=5; Sol = 7; La = 9; Si=11} [12])
-    // 0<=fondamentale<12
-
+    private boolean harmonic = false;
+    private int fundamental = DEFAULT_FUNDAMENTAL;
+    private int[] harmonicChord = createMajorChord(fundamental);
 
     /**
      * Prepares the sound engine for first-time use.
@@ -45,14 +38,16 @@ class SoundEngine implements PhysicsListener {
 
     /**
      * Create a table containing only the notes from a perfect major chord.
+     *
      * @return An array of note numbers representing the chord.
      */
-    private static int[] createMajorChord() {
+    private static int[] createMajorChord(int fondamental) {
         int[] tableau = new int[32];
-        tableau[0] = FONDAMENTAL + 12;
+        tableau[0] = fondamental + 12;
         tableau[1] = tableau[0] + 4;
         tableau[2] = tableau[1] + 3;
         tableau[3] = tableau[2] + 5;
+
         for (int i = 4; i < tableau.length; i++) {
             if (tableau[i - 1] - tableau[i - 2] == 5)
                 tableau[i] = tableau[i - 1] + 4;
@@ -68,7 +63,6 @@ class SoundEngine implements PhysicsListener {
     /**
      * Erases existing recorded data and re-initializes all systems.
      *
-     * @throws MidiUnavailableException
      * @throws InvalidMidiDataException
      */
     public void reset() throws InvalidMidiDataException {
@@ -89,8 +83,26 @@ class SoundEngine implements PhysicsListener {
         }
     }
 
+    /**
+     * Toggles the harmonic mode.
+     * <p>
+     * When in harmonic mode, notes are taken from a pregenerated pool of
+     * values.
+     *
+     * @param isHarmonic True if harmonic, false otherwise.
+     */
     public void setHarmonic(boolean isHarmonic) {
         harmonic = isHarmonic;
+    }
+
+    /**
+     * Changes the value of the fundamental note.
+     *
+     * @param newFundamental The new fundamental's value.
+     */
+    public void setFundamental(int newFundamental) {
+        fundamental = newFundamental;
+        harmonicChord = createMajorChord(fundamental);
     }
 
     /**
@@ -125,14 +137,20 @@ class SoundEngine implements PhysicsListener {
     public void bubbleToBubbleCollision(Bubble bubble, Bubble otherBubble) {
         synchronized (sequencer) {
             double relativeSize = 1 - bubble.getRadius() / Bubble.MAX_RADIUS;
+            double relativeSpeed = bubble.getSpeed().norm() / Bubble.MAX_SPEED;
             int note;
+
+            // harmonicChord is made up only of the notes from a perfect major
+            // chord, that is 132/12 + 12 = 32 notes in total (+12 in order to
+            // avoid having sounds that are too low).
             if (harmonic)
-                note = harmonicChord[(int) (relativeSize * harmonicChord.length)];  // harmonicChord n'est composé que des notes d'un accord parfait majeur, soit une 132/12 + 12 = 32 (+12 pour ne pas avoir des sons trop graves) en tout.
+                note = harmonicChord[(int) (relativeSize * harmonicChord.length)];
             else
                 note = (int) (132 * relativeSize);
-            long length = (long) ((1 - bubble.getSpeed().norm() / Bubble.MAX_SPEED) * NOTE_LENGTH);
-            int velocity = (int) (bubble.getSpeed().norm() / Bubble.MAX_SPEED * VELOCITY);
-            addNote(track1, note, sequencer.getTickPosition(), length, velocity);
+            long length = (long) ((1 - relativeSpeed) * NOTE_LENGTH);
+            int velocity = (int) (relativeSpeed * VELOCITY);
+            addNote(track1, note, sequencer.getTickPosition(), length,
+                    velocity);
             sequencer.setTickPosition(sequencer.getTickPosition() + length);
         }
     }
@@ -146,14 +164,20 @@ class SoundEngine implements PhysicsListener {
     public void bubbleToWallCollision(Bubble bubble) {
         synchronized (sequencer) {
             double relativeSize = 1 - bubble.getRadius() / Bubble.MAX_RADIUS;
+            double relativeSpeed = bubble.getSpeed().norm() / Bubble.MAX_SPEED;
             int note;
+
+            // harmonicChord is made up only of the notes from a perfect major
+            // chord, that is 132/12 + 12 = 32 notes in total (+12 in order to
+            // avoid having sounds that are too low).
             if (harmonic)
-                note = harmonicChord[(int) (relativeSize * harmonicChord.length)];  // harmonicChord n'est composé que des notes d'un accord parfait majeur, soit une 132/12 + 12 = 32 (+12 pour ne pas avoir des sons trop graves) en tout.
+                note = harmonicChord[(int) (relativeSize * harmonicChord.length)];
             else
                 note = (int) (132 * relativeSize);
-            long length = (long) ((1 - bubble.getSpeed().norm() / Bubble.MAX_SPEED) * NOTE_LENGTH);
-            int velocity = (int) (bubble.getSpeed().norm() / Bubble.MAX_SPEED * VELOCITY);
-            addNote(track1, note, sequencer.getTickPosition(), length, velocity);
+            long length = (long) ((1 - relativeSpeed) * NOTE_LENGTH);
+            int velocity = (int) (relativeSpeed * VELOCITY);
+            addNote(track1, note, sequencer.getTickPosition(), length,
+                    velocity);
             sequencer.setTickPosition(sequencer.getTickPosition() + length);
         }
     }

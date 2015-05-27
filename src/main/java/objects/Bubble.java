@@ -34,12 +34,15 @@ public class Bubble extends PhysicsObject {
      * @param otherBubble The second colliding bubble.
      * @return Returns the new speed for bubble.
      */
-    private static Vector2d calcCollisionSpeed(Bubble bubble, Bubble otherBubble) {
+    private static Vector2d calcCollisionSpeed(Bubble bubble,
+                                               Bubble otherBubble) {
         Vector2d posDiff = bubble.getPosition().sub(otherBubble.getPosition());
         Vector2d speedDiff = bubble.getSpeed().sub(otherBubble.getSpeed());
         double m1 = bubble.getMass();
         double m2 = otherBubble.getMass();
-        return bubble.getSpeed().sub(posDiff.product(2 * m2 / (m1 + m2) * posDiff.scalar(speedDiff) / posDiff.norm2()));
+        return bubble.getSpeed().sub(posDiff.product(
+                2 * m2 / (m1 + m2) * posDiff.scalar(speedDiff) / posDiff.norm2()
+        ));
     }
 
     /**
@@ -80,7 +83,8 @@ public class Bubble extends PhysicsObject {
      */
     @Override
     public void setSpeed(Vector2d newSpeed) {
-        super.setSpeed(newSpeed.getNormed(Math.min(newSpeed.norm(), MAX_SPEED)));
+        super.setSpeed(
+                newSpeed.getNormed(Math.min(newSpeed.norm(), MAX_SPEED)));
     }
 
     /**
@@ -97,12 +101,11 @@ public class Bubble extends PhysicsObject {
 
     /**
      * Checks if the bubble intersects with the fan's cone of wind.
-     * <p>
+     *
      * To simplify calculations, we only check if the center of the circle is in
      * the triangle, since this is where the force gets applied. We do not care
      * about the cone's length either, since we are assuming it has infinite
      * reach.
-     *
      * @param fan The fan to check against.
      * @return True if it intersects, false otherwise.
      */
@@ -133,9 +136,9 @@ public class Bubble extends PhysicsObject {
     public boolean intersects(Wall wall) {
         Vector2d line = wall.getBoundsLine();
 
-        if (wall.isHorizontal() && Math.abs(line.y - position.y) <= radius) {
+        if (wall.isHorizontal() && Math.abs(line.y - position.y) <= radius)
             return true;
-        } else if (!wall.isHorizontal() && Math.abs(line.x - position.x) <= radius)
+        else if (!wall.isHorizontal() && Math.abs(line.x - position.x) <= radius)
             return true;
 
         return false;
@@ -148,7 +151,8 @@ public class Bubble extends PhysicsObject {
      */
     public void collide(Bubble otherBubble) {
         Vector2d diff = otherBubble.getPosition().sub(position);
-        Vector2d newPosition = position.sum(diff.getNormed(radius + otherBubble.getRadius()));
+        Vector2d newPosition = position.sum(
+                diff.getNormed(radius + otherBubble.getRadius()));
         otherBubble.setPosition(newPosition);
         setSpeed(calcCollisionSpeed(this, otherBubble));
         otherBubble.setSpeed(calcCollisionSpeed(otherBubble, this));
