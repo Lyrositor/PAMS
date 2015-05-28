@@ -14,7 +14,7 @@ interface PhysicsListener {
     void bubbleToBubbleCollision(Bubble bubble, Bubble otherBubble);
 
     /**
-     * Called when a bubble collides wiht a wall.
+     * Called when a bubble collides with a wall.
      *
      * @param bubble The colliding bubble.
      * @param wall The colliding wall.

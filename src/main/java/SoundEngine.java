@@ -23,7 +23,7 @@ class SoundEngine implements PhysicsListener {
     /**
      * Prepares the sound engine for first-time use.
      *
-     * @throws MidiUnavailableException Thrown if unable to initalize systems.
+     * @throws MidiUnavailableException Thrown if unable to initialize systems.
      * @throws InvalidMidiDataException Thrown if unable to create sequence.
      */
     public SoundEngine() throws MidiUnavailableException,
@@ -88,7 +88,7 @@ class SoundEngine implements PhysicsListener {
     /**
      * Toggles the harmonic mode.
      * <p>
-     * When in harmonic mode, notes are taken from a pregenerated pool of
+     * When in harmonic mode, notes are taken from a pre-generated pool of
      * values.
      *
      * @param isHarmonic True if harmonic, false otherwise.
@@ -100,7 +100,7 @@ class SoundEngine implements PhysicsListener {
     /**
      * Changes the value of the fundamental note.
      *
-     * @param newFundamental The new fundamental's value.
+     * @param newFundamental The new value of the fundamental.
      */
     public void setFundamental(int newFundamental) {
         fundamental = newFundamental;
