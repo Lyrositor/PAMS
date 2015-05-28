@@ -11,6 +11,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 
+/**
+ * Main class for the project.
+ */
 class PAMS {
 
     /**
@@ -20,7 +23,7 @@ class PAMS {
     /**
      * The window's title.
      */
-    private static final String TITLE = "org.pcc.pams.PAMS";
+    private static final String TITLE = "PAMS";
     /**
      * The time step used for the physics simulation.
      */
