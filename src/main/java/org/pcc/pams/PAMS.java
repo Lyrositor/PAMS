@@ -1,5 +1,7 @@
-import math.Vector2d;
-import objects.Fan;
+package org.pcc.pams;
+
+import org.pcc.pams.math.Vector2d;
+import org.pcc.pams.objects.Fan;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -11,14 +13,37 @@ import java.io.File;
 
 class PAMS {
 
+    /**
+     * The window's dimensions (width and height).
+     */
     private static final int[] DIMENSIONS = {1000, 600};
-    private static final String TITLE = "PAMS";
+    /**
+     * The window's title.
+     */
+    private static final String TITLE = "org.pcc.pams.PAMS";
+    /**
+     * The time step used for the physics simulation.
+     */
     private static final double DT = 0.01;
-
+    /**
+     * The program's main window.
+     */
     private final JFrame main;
+    /**
+     * A frame containing all the window's elements.
+     */
     private final PAMSFrame frame;
-    private final PhysicsEngine physics;
+    /**
+     * The canvas on which the simulation is drawn.
+     */
     private final BubblesPanel canvas;
+    /**
+     * An instance of the physics engine used to run the simulation.
+     */
+    private final PhysicsEngine physics;
+    /**
+     * An instance of the sound engine used to generate sound.
+     */
     private SoundEngine sound;
 
     /**
@@ -314,7 +339,8 @@ class PAMS {
             Fan fan = physics.getFan();
             if (fan.getIntensity() > 0) {
                 Vector2d p = fan.getPosition();
-                fan.setAngle(new Vector2d(e.getX() - p.x, e.getY() - p.y).angle());
+                fan.setAngle(
+                        new Vector2d(e.getX() - p.x, e.getY() - p.y).angle());
             }
         }
 

@@ -1,5 +1,7 @@
-import objects.Bubble;
-import objects.Wall;
+package org.pcc.pams;
+
+import org.pcc.pams.objects.Bubble;
+import org.pcc.pams.objects.Wall;
 
 import javax.sound.midi.*;
 import java.io.File;
@@ -9,15 +11,50 @@ import java.io.File;
  */
 class SoundEngine implements PhysicsListener {
 
-    private static final int DEFAULT_FUNDAMENTAL = 4;  // Mi/C
-    private static final int NOTE_LENGTH = 32;  // Half-note
-    private static final int TEMPO = 120;  // The resultant melody's tempo
-    private static final int VELOCITY = 64;  // Middle volume
+    /**
+     * The default fundamental, which is C (Mi).
+     */
+    private static final int DEFAULT_FUNDAMENTAL = 4;
+    /**
+     * The standard note length, which is a half-note.
+     */
+    private static final int NOTE_LENGTH = 32;
+    /**
+     * The resultant melody's tempo.
+     */
+    private static final int TEMPO = 120;
+    /**
+     * The notes' max volume.
+     */
+    private static final int MAX_VELOCITY = 64;
+    /**
+     * The sequencer used to order the sounds and produce a MIDI file.
+     */
     private final Sequencer sequencer;
+    /**
+     * The synthesizer used to generate the sounds.
+     */
     private final Synthesizer synthesizer;
+    /**
+     * The sequencer's first (and only) track.
+     */
     private Track track1;
+    /**
+     * Whether or not harmonic sounds are being generated.
+     * <p>
+     * This is used to produce a more melodious recording, and can noticeably
+     * change the sound when there are many bubbles.
+     */
     private boolean harmonic = false;
+    /**
+     * The current fundamental in use.
+     */
     private int fundamental = DEFAULT_FUNDAMENTAL;
+    /**
+     * The current harmonic chord associated with the fundamental.
+     *
+     * Must be updated each time the fundamental changes.
+     */
     private int[] harmonicChord = createMajorChord(fundamental);
 
     /**
@@ -150,7 +187,7 @@ class SoundEngine implements PhysicsListener {
             else
                 note = (int) (132 * relativeSize);
             long length = (long) ((1 - relativeSpeed) * NOTE_LENGTH);
-            int velocity = (int) (relativeSpeed * VELOCITY);
+            int velocity = (int) (relativeSpeed * MAX_VELOCITY);
             addNote(track1, note, sequencer.getTickPosition(), length,
                     velocity);
             sequencer.setTickPosition(sequencer.getTickPosition() + length);
@@ -178,7 +215,7 @@ class SoundEngine implements PhysicsListener {
             else
                 note = (int) (132 * relativeSize);
             long length = (long) ((1 - relativeSpeed) * NOTE_LENGTH);
-            int velocity = (int) (relativeSpeed * VELOCITY);
+            int velocity = (int) (relativeSpeed * MAX_VELOCITY);
             addNote(track1, note, sequencer.getTickPosition(), length,
                     velocity);
             sequencer.setTickPosition(sequencer.getTickPosition() + length);
@@ -194,8 +231,8 @@ class SoundEngine implements PhysicsListener {
      * @param tickLength The length of the note (in ticks).
      * @param velocity The volume of the note.
      */
-    private void addNote(
-            Track track, int note, long startTick, long tickLength, int velocity) {
+    private void addNote(Track track, int note, long startTick, long tickLength,
+                         int velocity) {
         ShortMessage msgOn = new ShortMessage();
         ShortMessage msgOff = new ShortMessage();
 
@@ -212,5 +249,4 @@ class SoundEngine implements PhysicsListener {
             e.printStackTrace();
         }
     }
-
 }

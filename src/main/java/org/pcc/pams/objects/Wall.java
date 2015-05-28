@@ -1,6 +1,6 @@
-package objects;
+package org.pcc.pams.objects;
 
-import math.Vector2d;
+import org.pcc.pams.math.Vector2d;
 
 import java.awt.*;
 
@@ -13,12 +13,44 @@ import java.awt.*;
  */
 public class Wall extends PhysicsObject {
 
+    /**
+     * The collision intensity incrementing unit.
+     * <p>
+     * Raise this to make the intensity rise faster.
+     */
     public static final double INTENSITY_INC = 10;
+    /**
+     * The collision intensity decrementing unit.
+     *
+     * Lower this to make the intensity diminish faster.
+     */
     public static final double INTENSITY_DEC = -0.3;
+    /**
+     * The wall's drawable dimensions.
+     */
     private final Vector2d dimensions;
+    /**
+     * A point of the infinite boundary line's position.
+     *
+     * Used to calculate collisions.
+     */
     private final Vector2d boundsLine;
+    /**
+     * The wall's base color, from which its current color is calculated.
+     *
+     * The wall's color depends on its {@code collisionIntensity}.
+     */
     private final Color baseColor;
+    /**
+     * Whether the wall is horizontal or vertical.
+     */
     private final boolean isHorizontal;
+    /**
+     * The wall's current level of collision.
+     *
+     * This represents how recently and how intensely the wall has been
+     * collided with, and is used to modify its color.
+     */
     private double collisionIntensity = 0;
 
     /**

@@ -1,7 +1,9 @@
-import math.Vector2d;
-import objects.Bubble;
-import objects.Fan;
-import objects.Wall;
+package org.pcc.pams;
+
+import org.pcc.pams.math.Vector2d;
+import org.pcc.pams.objects.Bubble;
+import org.pcc.pams.objects.Fan;
+import org.pcc.pams.objects.Wall;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,14 +15,27 @@ import java.util.List;
  */
 class BubblesPanel extends JPanel {
 
+    /**
+     * The buffered image to which everything is drawn.
+     * <p>
+     * The image is then drawn on the canvas.
+     */
     private final BufferedImage image;
+
+    /**
+     * The anti-aliased buffer used for drawing.
+     */
     private final Graphics2D buffer;
+
+    /**
+     * An instance of the physics engine running the simulation.
+     */
     private final PhysicsEngine physics;
 
     /**
      * Create the panel, configuring its buffer.
      *
-     * @param physics The PhysicsEngine instance to watch.
+     * @param physics The {@link org.pcc.pams.PhysicsEngine} instance to watch.
      * @param dim     The dimensions for the panel.
      */
     public BubblesPanel(PhysicsEngine physics, int[] dim) {

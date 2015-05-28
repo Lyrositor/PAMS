@@ -1,6 +1,6 @@
-package objects;
+package org.pcc.pams.objects;
 
-import math.Vector2d;
+import org.pcc.pams.math.Vector2d;
 
 import java.awt.*;
 
@@ -12,9 +12,17 @@ import java.awt.*;
  */
 public class Fan extends PhysicsObject {
 
+    /**
+     * The maximum permissible wind intensity.
+     */
     public static final int MAX_INTENSITY = 500;
-
+    /**
+     * The fan's color (also used to calculate the wind cone color).
+     */
     private final Color fanColor;
+    /**
+     * The wind's force vector.
+     */
     private final Vector2d force;
 
     /**

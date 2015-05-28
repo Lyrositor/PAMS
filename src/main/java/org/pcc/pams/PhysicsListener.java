@@ -1,8 +1,11 @@
-import objects.Bubble;
-import objects.Wall;
+package org.pcc.pams;
+
+import org.pcc.pams.objects.Bubble;
+import org.pcc.pams.objects.Wall;
 
 /**
- * To be implemented by classes who need to listen to events from PhysicsEngine.
+ * To be implemented by classes who need to listen to events from
+ * {@link org.pcc.pams.PhysicsEngine}.
  */
 interface PhysicsListener {
     /**

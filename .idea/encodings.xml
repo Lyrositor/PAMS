@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
-    <file url="file://$PROJECT_DIR$/src/main/java/BubblesPanel.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/PAMS.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/PAMSFrame.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/PhysicsEngine.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/PhysicsListener.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/SoundEngine.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/math/Vector2d.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/objects/Bubble.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/objects/Fan.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/objects/PhysicsObject.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/objects/Wall.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/pcc/pams/BubblesPanel.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/pcc/pams/PAMS.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/pcc/pams/PAMSFrame.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/pcc/pams/PhysicsEngine.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/pcc/pams/PhysicsListener.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/pcc/pams/SoundEngine.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/pcc/pams/math/Vector2d.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/pcc/pams/objects/Bubble.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/pcc/pams/objects/Fan.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/pcc/pams/objects/PhysicsObject.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/pcc/pams/objects/Wall.java" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

@@ -1,7 +1,9 @@
-import math.Vector2d;
-import objects.Bubble;
-import objects.Fan;
-import objects.Wall;
+package org.pcc.pams;
+
+import org.pcc.pams.math.Vector2d;
+import org.pcc.pams.objects.Bubble;
+import org.pcc.pams.objects.Fan;
+import org.pcc.pams.objects.Wall;
 
 import java.awt.*;
 import java.util.*;
@@ -10,17 +12,33 @@ import java.util.List;
 /**
  * Performs all physics simulations on the bubbles.
  * <p>
- * Note: the <code>bubbles</code> list must remain synchronized across various
+ * Note: the {@code bubbles} list must remain synchronized across various
  * threads, and should always be surrounded in a synchronized block when this
  * class is modified.
  */
 class PhysicsEngine {
 
+    /**
+     * The initial number of bubbles to generate.
+     */
     public static final int NUM_INITIAL_BUBBLES = 3;
-
+    /**
+     * The fan optionally used to blow bubbles in a certain direction.
+     */
     private final Fan fan;
+    /**
+     * A list of currently-simulated bubbles.
+     * <p>
+     * Must be kept synchronized across every thread.
+     */
     private final List<Bubble> bubbles;
+    /**
+     * An array of four walls delimiting the simulation.
+     */
     private final Wall[] walls;
+    /**
+     * A list of listeners to notify when a physical event occurs.
+     */
     private final ArrayList<PhysicsListener> listeners = new ArrayList<>();
 
     /**
@@ -37,7 +55,7 @@ class PhysicsEngine {
         Vector2d v = new Vector2d(10, dim[1] - 20);
         Vector2d h = new Vector2d(dim[0], 10);
         Color color = Color.YELLOW;
-        walls = new Wall[]{
+        walls = new Wall[] {
                 new Wall(v, new Vector2d(0, 10), false, 10, color),
                 new Wall(h, new Vector2d(0, 0), true, 10, color),
                 new Wall(v, new Vector2d(dim[0] - 10, 10), false, 0, color),
@@ -108,9 +126,10 @@ class PhysicsEngine {
     }
 
     /**
-     * Adds a PhysicsListener to notify when a physical event occurs.
+     * Adds a {@link org.pcc.pams.PhysicsListener} to notify when a physical
+     * event occurs.
      *
-     * @param newListener The PhysicsListener to add.
+     * @param newListener The {@link org.pcc.pams.PhysicsListener} to add.
      */
     public void addListener(PhysicsListener newListener) {
         listeners.add(newListener);

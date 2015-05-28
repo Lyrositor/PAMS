@@ -1,4 +1,4 @@
-package math;
+package org.pcc.pams.math;
 
 /**
  * Represents a 2D vector.
@@ -8,8 +8,17 @@ package math;
  */
 public class Vector2d {
 
+    /**
+     * The null vector (0, 0).
+     */
     public static final Vector2d NULL = new Vector2d(0, 0);
+    /**
+     * The {@code x} coordinate.
+     */
     public double x;
+    /**
+     * The {@code y} coordinate.
+     */
     public double y;
 
     /**
@@ -105,7 +114,7 @@ public class Vector2d {
      * Does not change this vector's value.
      * @param otherVector The other vector to use for the sum.
      * @return A vector whose coordinates are the sum of this vector and
-     * <code>otherVector</code>.
+     * {@code otherVector}.
      */
     public Vector2d sum(Vector2d otherVector) {
         return new Vector2d(x + otherVector.x, y + otherVector.y);
@@ -117,7 +126,7 @@ public class Vector2d {
      * Does not change this vector's value.
      * @param otherVector The other vector to use for the difference.
      * @return A vector whose coordinates are the difference of this vector and
-     * <code>otherVector</code>.
+     * {@code otherVector}.
      */
     public Vector2d sub(Vector2d otherVector) {
         return new Vector2d(x - otherVector.x, y - otherVector.y);
@@ -129,7 +138,7 @@ public class Vector2d {
      * Does not change this vector's value.
      * @param k The scalar to multiply by.
      * @return A vector whose coordinates are the product of this vector's
-     * coordinates and <code>k</code>.
+     * coordinates and {@code k}.
      */
     public Vector2d product(double k) {
         return new Vector2d(x * k, y * k);

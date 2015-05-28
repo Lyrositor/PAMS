@@ -1,6 +1,6 @@
-package objects;
+package org.pcc.pams.objects;
 
-import math.Vector2d;
+import org.pcc.pams.math.Vector2d;
 
 import java.awt.*;
 
@@ -9,9 +9,21 @@ import java.awt.*;
  */
 public class Bubble extends PhysicsObject {
 
+    /**
+     * The maximum permissible radius for a bubble.
+     */
     public static final double MAX_RADIUS = 25.0;
+    /**
+     * The maximum speed the bubble can reach (by norm).
+     */
     public static final double MAX_SPEED = 500;
+    /**
+     * The bubble's physical density, used to calculate its mass.
+     */
     private static final double DENSITY = 7.0;
+    /**
+     * The bubble's radius.
+     */
     private final double radius;
 
     /**

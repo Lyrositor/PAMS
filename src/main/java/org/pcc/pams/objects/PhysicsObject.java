@@ -1,13 +1,20 @@
-package objects;
+package org.pcc.pams.objects;
 
-import math.Vector2d;
+import org.pcc.pams.math.Vector2d;
 
 /**
  * Represents a 2D object that has a position and a speed.
  */
 class PhysicsObject {
 
+    /**
+     * The physical object's current position (relative to the top-left corner).
+     */
     Vector2d position;
+
+    /**
+     * The physical object's current speed.
+     */
     Vector2d speed;
 
     /**
