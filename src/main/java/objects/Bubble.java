@@ -46,15 +46,16 @@ public class Bubble extends PhysicsObject {
     }
 
     /**
-     * Calculates the color of the bubble based on its size and returns it.
+     * Calculates the color of the bubble based on its speed and returns it.
      *
      * @return The color of the bubble.
      */
     public Color getColor() {
+        double norm = speed.norm();
         return new Color(
-                (int) (30 + radius / 25 * 225),
-                (int) (70 + radius / 25 * 185),
-                (int) (110 + radius / 25 * 145));
+                (int) (30 + norm / MAX_SPEED * 225),
+                (int) (70 + norm / MAX_SPEED * 185),
+                (int) (110 + norm / MAX_SPEED * 145));
     }
 
     /**

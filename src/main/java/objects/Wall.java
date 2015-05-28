@@ -6,17 +6,20 @@ import java.awt.*;
 
 /**
  * Represents a static wall.
- * <p>
+ *
  * The wall is defined by two objects: a rectangle, which describes its
  * appearance, and an infinite line, which be horizontal or vertical, which
  * represents the boundary for the wall.
  */
 public class Wall extends PhysicsObject {
 
+    public static final double INTENSITY_INC = 10;
+    public static final double INTENSITY_DEC = -0.3;
     private final Vector2d dimensions;
     private final Vector2d boundsLine;
-    private final Color color;
+    private final Color baseColor;
     private final boolean isHorizontal;
+    private double collisionIntensity = 0;
 
     /**
      * Constructs a new static wall.
@@ -26,16 +29,16 @@ public class Wall extends PhysicsObject {
      * @param isHorizontal Whether the wall is horizontal or vertical.
      * @param boundsOffset The distance along one coordinate between the wall's
      *                     position and its bounds.
-     * @param color The wall's color.
+     * @param baseColor The wall's base color.
      */
     public Wall(
             Vector2d dimensions, Vector2d position,
-            boolean isHorizontal, double boundsOffset, Color color) {
+            boolean isHorizontal, double boundsOffset, Color baseColor) {
         super(position, Vector2d.NULL);
 
         this.dimensions = dimensions;
         this.isHorizontal = isHorizontal;
-        this.color = color;
+        this.baseColor = baseColor;
 
         if (isHorizontal)
             boundsLine = new Vector2d(position.x, position.y + boundsOffset);
@@ -70,12 +73,21 @@ public class Wall extends PhysicsObject {
         return boundsLine;
     }
 
+    public void adjustCollisionIntensity(double delta) {
+        collisionIntensity = Math.max(
+                Math.min(collisionIntensity + delta, 1), 0);
+    }
+
     /**
-     * Returns the color of the wall.
+     * Calculates and returns the color of the wall.
      *
-     * @return The wall's color.
+     * The color depends on the current collision intensity, which increases
+     * when a ball hits and decreases over time.
+     * @return The wall's current color.
      */
     public Color getColor() {
-        return color;
+        return new Color(
+                baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(),
+                35 + (int) (collisionIntensity * 150));
     }
 }

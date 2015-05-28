@@ -30,17 +30,18 @@ class PhysicsEngine {
      */
     public PhysicsEngine(int[] dim) {
         // Create the fan.
-        fan = new Fan(new Vector2d(dim[0] / 2, dim[1] / 2), Color.cyan);
+        fan = new Fan(new Vector2d(dim[0] / 2, dim[1] / 2), Color.CYAN);
 
         // Create the walls.
-        Vector2d v = new Vector2d(10, dim[1]);
+        // Walls are stored as an array in this order: Left, Top, Right, Bottom.
+        Vector2d v = new Vector2d(10, dim[1] - 20);
         Vector2d h = new Vector2d(dim[0], 10);
-        Color c = Color.blue;
+        Color color = Color.YELLOW;
         walls = new Wall[]{
-                new Wall(v, new Vector2d(0, 0), false, 10, c),  // Left
-                new Wall(h, new Vector2d(0, 0), true, 10, c),  // Top
-                new Wall(v, new Vector2d(dim[0] - 10, 0), false, 0, c), // Right
-                new Wall(h, new Vector2d(0, dim[1] - 10), true, 0, c)  // Bottom
+                new Wall(v, new Vector2d(0, 10), false, 10, color),
+                new Wall(h, new Vector2d(0, 0), true, 10, color),
+                new Wall(v, new Vector2d(dim[0] - 10, 10), false, 0, color),
+                new Wall(h, new Vector2d(0, dim[1] - 10), true, 0, color)
         };
 
         // Create the initial bubbles.
@@ -166,6 +167,10 @@ class PhysicsEngine {
         ListIterator<Bubble> i;
 
         synchronized (bubbles) {
+            // Lower the walls' collision intensity.
+            for (Wall wall : walls)
+                wall.adjustCollisionIntensity(Wall.INTENSITY_DEC * delta);
+
             // Update the bubbles' position.
             i = bubbles.listIterator();
             while (i.hasNext()) {
@@ -216,7 +221,9 @@ class PhysicsEngine {
                         bubble.collide(wall);
                         if (!oldSpeed.equals(bubble.getSpeed())) {
                             for (PhysicsListener l : listeners)
-                                l.bubbleToWallCollision(bubble);
+                                l.bubbleToWallCollision(bubble, wall);
+                            wall.adjustCollisionIntensity(
+                                    Wall.INTENSITY_INC * delta);
                         }
                     }
             }

@@ -1,4 +1,5 @@
 import objects.Bubble;
+import objects.Wall;
 
 import javax.sound.midi.*;
 import java.io.File;
@@ -22,8 +23,8 @@ class SoundEngine implements PhysicsListener {
     /**
      * Prepares the sound engine for first-time use.
      *
-     * @throws MidiUnavailableException
-     * @throws InvalidMidiDataException
+     * @throws MidiUnavailableException Thrown if unable to initalize systems.
+     * @throws InvalidMidiDataException Thrown if unable to create sequence.
      */
     public SoundEngine() throws MidiUnavailableException,
             InvalidMidiDataException {
@@ -39,11 +40,12 @@ class SoundEngine implements PhysicsListener {
     /**
      * Create a table containing only the notes from a perfect major chord.
      *
+     * @param fundamental The note number of the fundamental to use.
      * @return An array of note numbers representing the chord.
      */
-    private static int[] createMajorChord(int fondamental) {
+    private static int[] createMajorChord(int fundamental) {
         int[] tableau = new int[32];
-        tableau[0] = fondamental + 12;
+        tableau[0] = fundamental + 12;
         tableau[1] = tableau[0] + 4;
         tableau[2] = tableau[1] + 3;
         tableau[3] = tableau[2] + 5;
@@ -63,7 +65,7 @@ class SoundEngine implements PhysicsListener {
     /**
      * Erases existing recorded data and re-initializes all systems.
      *
-     * @throws InvalidMidiDataException
+     * @throws InvalidMidiDataException Thrown if it fails to create sequence.
      */
     public void reset() throws InvalidMidiDataException {
         synchronized (sequencer) {
@@ -159,9 +161,10 @@ class SoundEngine implements PhysicsListener {
      * Called when a bubble collides into a wall.
      *
      * @param bubble The colliding bubble.
+     * @param wall The colliding wall.
      */
     @Override
-    public void bubbleToWallCollision(Bubble bubble) {
+    public void bubbleToWallCollision(Bubble bubble, Wall wall) {
         synchronized (sequencer) {
             double relativeSize = 1 - bubble.getRadius() / Bubble.MAX_RADIUS;
             double relativeSpeed = bubble.getSpeed().norm() / Bubble.MAX_SPEED;
