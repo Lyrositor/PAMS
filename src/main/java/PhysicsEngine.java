@@ -57,14 +57,14 @@ class PhysicsEngine {
     public void addBubbles(int count) {
         synchronized (bubbles) {
             double x = walls[2].getBoundsLine().x - walls[0].getBoundsLine().x;
-            double y = walls[1].getBoundsLine().y - walls[3].getBoundsLine().y;
+            double y = walls[3].getBoundsLine().y - walls[1].getBoundsLine().y;
             for (int i = 0; i < count; i++) {
                 double radius = Bubble.MAX_RADIUS * (0.8 * Math.random() + 0.2);
                 Vector2d position;
                 do {
                     position = new Vector2d(
                             radius + Math.random() * (x - 2 * radius),
-                            -(radius + Math.random() * (y - 2 * radius)));
+                            radius + Math.random() * (y - 2 * radius));
                 } while (!isEmptySpace(position, radius));
                 Vector2d speed = new Vector2d(
                         0.2 + 0.8 * Math.random(), 0.2 + 0.8 * Math.random()
