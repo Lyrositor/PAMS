@@ -40,22 +40,22 @@ class SoundEngine implements PhysicsListener {
      */
     private Track track1;
     /**
-     * Whether or not harmonic sounds are being generated.
+     * Whether or not harmoniousChord sounds are being generated.
      * <p>
      * This is used to produce a more melodious recording, and can noticeably
      * change the sound when there are many bubbles.
      */
-    private boolean harmonic = false;
+    private boolean harmonious = false;
     /**
      * The current fundamental in use.
      */
     private int fundamental = DEFAULT_FUNDAMENTAL;
     /**
-     * The current harmonic chord associated with the fundamental.
+     * The current harmonious chord associated with the fundamental.
      *
      * Must be updated each time the fundamental changes.
      */
-    private int[] harmonicChord = createMajorChord(fundamental);
+    private int[] harmoniousChord = createMajorChord(fundamental);
 
     /**
      * Prepares the sound engine for first-time use.
@@ -123,15 +123,15 @@ class SoundEngine implements PhysicsListener {
     }
 
     /**
-     * Toggles the harmonic mode.
+     * Toggles the harmonious mode.
      * <p>
-     * When in harmonic mode, notes are taken from a pre-generated pool of
+     * When in harmonious mode, notes are taken from a pre-generated pool of
      * values.
      *
-     * @param isHarmonic True if harmonic, false otherwise.
+     * @param isHarmonious True if harmonious, false otherwise.
      */
-    public void setHarmonic(boolean isHarmonic) {
-        harmonic = isHarmonic;
+    public void setHarmonious(boolean isHarmonious) {
+        harmonious = isHarmonious;
     }
 
     /**
@@ -141,7 +141,7 @@ class SoundEngine implements PhysicsListener {
      */
     public void setFundamental(int newFundamental) {
         fundamental = newFundamental;
-        harmonicChord = createMajorChord(fundamental);
+        harmoniousChord = createMajorChord(fundamental);
     }
 
     /**
@@ -179,11 +179,11 @@ class SoundEngine implements PhysicsListener {
             double relativeSpeed = bubble.getSpeed().norm() / Bubble.MAX_SPEED;
             int note;
 
-            // harmonicChord is made up only of the notes from a perfect major
+            // harmoniousChord is made up only of the notes from a perfect major
             // chord, that is 132/12 + 12 = 32 notes in total (+12 in order to
             // avoid having sounds that are too low).
-            if (harmonic)
-                note = harmonicChord[(int) (relativeSize * harmonicChord.length)];
+            if (harmonious)
+                note = harmoniousChord[(int) (relativeSize * harmoniousChord.length)];
             else
                 note = (int) (132 * relativeSize);
             long length = (long) ((1 - relativeSpeed) * NOTE_LENGTH);
@@ -207,11 +207,11 @@ class SoundEngine implements PhysicsListener {
             double relativeSpeed = bubble.getSpeed().norm() / Bubble.MAX_SPEED;
             int note;
 
-            // harmonicChord is made up only of the notes from a perfect major
+            // harmoniousChord is made up only of the notes from a perfect major
             // chord, that is 132/12 + 12 = 32 notes in total (+12 in order to
             // avoid having sounds that are too low).
-            if (harmonic)
-                note = harmonicChord[(int) (relativeSize * harmonicChord.length)];
+            if (harmonious)
+                note = harmoniousChord[(int) (relativeSize * harmoniousChord.length)];
             else
                 note = (int) (132 * relativeSize);
             long length = (long) ((1 - relativeSpeed) * NOTE_LENGTH);

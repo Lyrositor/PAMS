@@ -156,7 +156,7 @@ class PAMS {
         frame.intensitySlider.addChangeListener(new WindIntensityListener());
         frame.canvas.addMouseMotionListener(new WindAngleListener());
 
-        frame.harmonicCheckbox.addChangeListener(new HarmonicListener());
+        frame.harmoniousCheckbox.addChangeListener(new HarmoniousListener());
         frame.fundamentalComboBox.addItemListener(new FundamentalListener());
     }
 
@@ -358,9 +358,9 @@ class PAMS {
     }
 
     /**
-     * Listens for change in the value of the harmonic checkbox.
+     * Listens for change in the value of the harmonious checkbox.
      */
-    private class HarmonicListener implements ChangeListener {
+    private class HarmoniousListener implements ChangeListener {
 
         /**
          * Called when the checkbox's state is toggled.
@@ -369,7 +369,7 @@ class PAMS {
          */
         @Override
         public void stateChanged(ChangeEvent e) {
-            sound.setHarmonic(((JCheckBox) e.getSource()).isSelected());
+            sound.setHarmonious(((JCheckBox) e.getSource()).isSelected());
         }
     }
 

@@ -45,9 +45,9 @@ class PAMSFrame {
     public JPanel rootPanel;
 
     /**
-     * The checkbox to toggle harmonic mode.
+     * The checkbox to toggle harmonious mode.
      */
-    public JCheckBox harmonicCheckbox;
+    public JCheckBox harmoniousCheckbox;
 
     /**
      * The kinetic energy's display.
@@ -100,9 +100,9 @@ class PAMSFrame {
     private JPanel sidebar;
 
     /**
-     * The label for the harmonic checkbox.
+     * The label for the harmonious checkbox.
      */
-    private JLabel harmonicLabel;
+    private JLabel harmoniousLabel;
 
     /**
      * The label for the fundamental control.
